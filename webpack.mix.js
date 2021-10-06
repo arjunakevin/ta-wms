@@ -12,6 +12,13 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    .webpackConfig({
+        output: {
+            chunkFilename: 'js/[name].js?id=[chunkhash]',
+        }
+    })
     .postCss('resources/css/app.css', 'public/css', [
         //
-    ]);
+    ])
+    .version()
+    .vue({ version: 2 });

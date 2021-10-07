@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\LocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return inertia()->render('Dashboard');
 });
+
+Route::resource('/products', ProductController::class);
+Route::resource('/clients', ClientController::class);
+Route::resource('/locations', LocationController::class);

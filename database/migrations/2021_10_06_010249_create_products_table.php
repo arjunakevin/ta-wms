@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained()->cascadeOnDelete();
             $table->string('code')->unique();
-            $table->string('barcode')->unique();
+            $table->string('barcode')->nullable()->unique();
             $table->text('description_1');
             $table->text('description_2')->nullable();
             $table->boolean('is_active')->default(1);

@@ -64,7 +64,7 @@
             </div><!-- content-header -->
 
             <div class="content-body">
-                <div class="container pd-x-0">
+                <div class="pd-x-0">
                     <slot />
                 </div><!-- container -->
             </div>
@@ -95,7 +95,7 @@ export default {
                 },
                 {
                     label: 'Inbound Delivery',
-                    link: '#',
+                    link: route('inbounds.index'),
                     icon: 'arrow-down'
                 },
                 {

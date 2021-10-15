@@ -96,4 +96,23 @@ class ProductController extends Controller
 
         return redirect()->route('products.index');
     }
+
+    /**
+     * Search product for list items.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function list(Request $request)
+    {
+        $query = $request->get('query');
+        $client_id = $request->get('client_id');
+
+        $data = Product::where('code', 'like', "%${query}%")
+            ->whereClientId($client_id)
+            ->limit(15)
+            ->get();
+
+        return response()->json($data);
+    }
 }

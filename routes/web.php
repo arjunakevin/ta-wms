@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\InboundDeliveryController;
+use App\Http\Controllers\InboundDeliveryDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +25,8 @@ Route::get('/', function () {
 Route::resource('/products', ProductController::class);
 Route::resource('/clients', ClientController::class);
 Route::resource('/locations', LocationController::class);
+
+Route::resource('inbounds', InboundDeliveryController::class);
+Route::resource('inbound_details', InboundDeliveryDetailController::class)
+    ->parameter('inbound_details', 'detail')
+    ->only('store', 'update', 'destroy');

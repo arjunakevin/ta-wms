@@ -1,7 +1,7 @@
 <template>
     <ul class="pagination mg-b-0 justify-content-end pagination-outline">
         <li v-for="(link, index) in data.links" :key="`link-${index}`" class="page-item" :class="{ disabled: !link.url, active: link.active }">
-            <Link :href="link.url" class="page-link"><span v-html="link.label" ></span></Link>
+            <Link :href="link.url" class="page-link" preserve-state><span v-html="link.label"></span></Link>
         </li>
     </ul>
 </template>

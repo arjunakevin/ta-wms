@@ -17,6 +17,7 @@ class CreateInventoriesTable extends Migration
             $table->id();
             $table->foreignId('location_id')->nullable()->constrained();
             $table->nullableMorphs('documentable');
+            $table->foreignId('detail_id')->nullable();
             $table->foreignId('product_id')->constrained();
             $table->integer('base_quantity');
             $table->integer('pick_quantity')->default(0);

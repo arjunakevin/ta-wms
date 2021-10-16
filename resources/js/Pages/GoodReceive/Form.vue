@@ -133,7 +133,7 @@ export default {
                         base_quantity: detail.base_quantity,
                         receive_quantity: detail.receive_quantity,
                         open_check_quantity: detail.open_check_quantity,
-                        open_putaway_quantity: detail.open_putaway_quantity
+                        open_putaway_quantity: 0
                     }
                 });
             }
@@ -167,7 +167,7 @@ export default {
                         { data: 'base_quantity', tdClass: 'text-center' },
                         { data: 'open_check_quantity', tdClass: 'text-center' },
                         { data: 'receive_quantity', tdClass: 'text-center' },
-                        { data: 'open_putaway_quantity', tdClass: 'text-center' }
+                        { data: 'receive_quantity', tdClass: 'text-center', render: () => 0 }
                     ]
                 }
             }

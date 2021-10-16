@@ -33,8 +33,7 @@ class GoodReceive extends Model
             'inbound_detail_id' => $detail->id,
             'base_quantity' => $detail->open_quantity,
             'receive_quantity' => 0,
-            'open_check_quantity' => $detail->open_quantity,
-            'open_putaway_quantity' => 0
+            'open_check_quantity' => $detail->open_quantity
         ]);
 
         $detail->update([
@@ -117,14 +116,14 @@ class GoodReceive extends Model
             }
 
             $this->inventories()->create([
+                'detail_id' => $detail->id,
                 'product_id' => $detail->inbound_delivery_detail->product_id,
                 'base_quantity' => $detail->check_quantity,
                 'posting_date' => $this->getRawOriginal('receive_date')
             ]);
 
             $detail->update([
-                'receive_quantity' => $detail->check_quantity,
-                'open_putaway_quantity' => $detail->check_quantity
+                'receive_quantity' => $detail->check_quantity
             ]);
         }
 

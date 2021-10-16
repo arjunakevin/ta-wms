@@ -20,7 +20,6 @@ class CreateGoodReceiveDetailsTable extends Migration
             $table->integer('base_quantity');
             $table->integer('receive_quantity')->default(0);
             $table->integer('open_check_quantity')->default(0);
-            $table->integer('open_putaway_quantity')->default(0);
             $table->timestamps();
         });
     }

@@ -74,9 +74,10 @@ class GoodReceiveController extends Controller
      */
     public function show(GoodReceive $good_receive)
     {
-        $good_receive->load('inbound_delivery.client');
+        $good_receive->load('inbound_delivery.client', 'inventories');
+
         $details = $good_receive->details()
-            ->with('inbound_delivery_detail.product')
+            ->with('inbound_delivery_detail.product', 'inventory')
             ->paginate();
 
         return inertia()->render('GoodReceive/Detail', compact('good_receive', 'details'));

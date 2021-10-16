@@ -12,9 +12,19 @@ class Inventory extends Model
     protected $fillable = [
         'location_id',
         'product_id',
+        'detail_id',
         'base_quantity',
         'pick_quantity',
         'put_quantity',
         'posting_date'
     ];
+
+    protected $appends = [
+        'available_pick_quantity'
+    ];
+
+    public function getAvailablePickQuantityAttribute()
+    {
+        return $this->base_quantity - $this->pick_quantity;
+    }
 }

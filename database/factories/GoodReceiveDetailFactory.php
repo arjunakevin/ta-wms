@@ -28,8 +28,7 @@ class GoodReceiveDetailFactory extends Factory
             'inbound_detail_id' => InboundDeliveryDetail::factory(),
             'base_quantity' => $this->faker->randomNumber(3),
             'receive_quantity' => $this->faker->randomNumber(3),
-            'open_check_quantity' => $this->faker->randomNumber(3),
-            'open_putaway_quantity' => $this->faker->randomNumber(3)
+            'open_check_quantity' => $this->faker->randomNumber(3)
         ];
     }
 }

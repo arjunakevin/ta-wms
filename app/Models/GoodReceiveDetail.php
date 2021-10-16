@@ -13,8 +13,7 @@ class GoodReceiveDetail extends Model
         'inbound_detail_id',
         'base_quantity',
         'receive_quantity',
-        'open_check_quantity',
-        'open_putaway_quantity'
+        'open_check_quantity'
     ];
 
     protected $appends = [
@@ -29,5 +28,10 @@ class GoodReceiveDetail extends Model
     public function getCheckQuantityAttribute()
     {
         return $this->base_quantity - $this->open_check_quantity;
+    }
+
+    public function inventory()
+    {
+        return $this->hasOne(Inventory::class, 'detail_id');
     }
 }

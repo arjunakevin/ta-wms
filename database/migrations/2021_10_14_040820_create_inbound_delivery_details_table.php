@@ -23,6 +23,7 @@ class CreateInboundDeliveryDetailsTable extends Migration
             $table->timestamps();
 
             $table->unique(['inbound_delivery_id', 'line_id']);
+            $table->unique(['inbound_delivery_id', 'product_id']);
         });
     }
 

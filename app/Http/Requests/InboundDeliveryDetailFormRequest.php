@@ -73,4 +73,16 @@ class InboundDeliveryDetailFormRequest extends FormRequest
             'product_id' => 'product'
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'product_id.unique' => 'Product already exists.'
+        ];
+    }
 }

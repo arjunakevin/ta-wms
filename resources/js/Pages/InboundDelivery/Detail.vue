@@ -31,6 +31,9 @@
         <div class="tab-content bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                 <form>
+                    <div class="alert alert-danger" role="alert" v-if="errors.message">
+                        {{ errors.message }}
+                    </div>
                     <div class="form-group row">
                         <label for="id" class="col-sm-2 col-form-label">Inbound ID</label>
                         <div class="col-sm-10 d-flex align-items-center">
@@ -151,7 +154,7 @@ import { Link } from '@inertiajs/inertia-vue';
 import Pagination from '../../Components/Pagination';
 
 export default {
-    props: ['inbound', 'details'],
+    props: ['inbound', 'details', 'errors'],
     components: {
         Link,
         Pagination
@@ -168,7 +171,8 @@ export default {
                     this.deleting = true;
 
                     $('#delete-modal').modal('hide');
-                }
+                },
+                onFinish: () => this.deleting = false
             });
         }
     }

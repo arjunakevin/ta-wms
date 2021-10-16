@@ -100,7 +100,7 @@ export default {
                 },
                 {
                     label: 'Good Receiving',
-                    link: '#',
+                    link: route('grs.index'),
                     icon: 'file-plus'
                 },
                 {

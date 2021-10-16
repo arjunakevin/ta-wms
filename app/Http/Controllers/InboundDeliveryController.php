@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\InboundDelivery;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use App\Http\Requests\InboundDeliveryFormRequest;
 
 class InboundDeliveryController extends Controller
@@ -98,6 +99,12 @@ class InboundDeliveryController extends Controller
      */
     public function destroy(InboundDelivery $inbound)
     {
+        if ($inbound->processed()) {
+            throw ValidationException::withMessages([
+                'message' => 'Inbound is already received.'
+            ]);
+        }
+    
         $inbound->delete();
 
         return redirect()->route('inbounds.index');

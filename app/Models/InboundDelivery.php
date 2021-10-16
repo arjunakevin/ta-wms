@@ -11,6 +11,8 @@ class InboundDelivery extends Model
     use HasFactory;
 
     const STATUS_UNRECEIVED = 1;
+    const STATUS_PARTIALLY_RECEIVED = 2;
+    const STATUS_FULLY_RECEIVED = -99;
 
     protected $fillable = [
         'reference',
@@ -26,9 +28,30 @@ class InboundDelivery extends Model
         'po_date_formatted'
     ];
 
-    public function createGoodReceive()
+    /**
+     * Update inbound delivery status
+     *
+     * @return void
+     */
+    public function updateStatus()
     {
-        
+        $base_quantity = $this->details->sum('base_quantity');
+        $open_quantity = $this->details->sum('open_quantity');
+
+        if ($open_quantity == 0) {
+            $this->update([
+                'status' => InboundDelivery::STATUS_FULLY_RECEIVED
+            ]);
+        } else if ($open_quantity < $base_quantity) {
+            $this->update([
+                'status' => InboundDelivery::STATUS_PARTIALLY_RECEIVED
+            ]);
+        }
+    }
+
+    public function processed()
+    {
+        return $this->status != InboundDelivery::STATUS_UNRECEIVED;
     }
 
     public function client()

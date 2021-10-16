@@ -12,7 +12,7 @@ class InboundDelivery extends Model
 
     const STATUS_UNRECEIVED = 1;
     const STATUS_PARTIALLY_RECEIVED = 2;
-    const STATUS_FULLY_RECEIVED = -99;
+    const STATUS_FULLY_RECEIVED = -1;
 
     protected $fillable = [
         'reference',

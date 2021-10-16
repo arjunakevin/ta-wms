@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\GoodReceiveController;
 use App\Http\Controllers\InboundDeliveryController;
 use App\Http\Controllers\InboundDeliveryDetailController;
@@ -41,3 +42,5 @@ Route::post('grs/inbound/search', [GoodReceiveController::class, 'searchInbound'
 Route::get('grs/{good_receive}/check', [GoodReceiveController::class, 'check'])->name('grs.check');
 Route::post('grs/{good_receive}/check', [GoodReceiveController::class, 'submitCheck'])->name('grs.check.submit');
 Route::post('grs/{good_receive}/receive', [GoodReceiveController::class, 'receive'])->name('grs.receive');
+
+Route::get('inventories', [InventoryController::class, 'index'])->name('inventories.index');

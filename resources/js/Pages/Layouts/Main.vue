@@ -108,7 +108,7 @@ export default {
                 },
                 {
                     label: 'Inventory List',
-                    link: '#',
+                    link: route('inventories.index'),
                     icon: 'archive'
                 },
                 {

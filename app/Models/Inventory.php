@@ -27,4 +27,14 @@ class Inventory extends Model
     {
         return $this->base_quantity - $this->pick_quantity;
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
 }

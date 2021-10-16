@@ -58,7 +58,7 @@
                                 :serializer="item => `${item.name} (${item.code})`"
                                 @hit="setClient($event)"
                             />
-                            <small class="text-danger" v-if="errors.client_code">{{ errors.client_code }}</small>
+                            <small class="text-danger" v-if="errors.client_id">{{ errors.client_id }}</small>
                         </div>
                     </div>
                     <div class="form-group row">

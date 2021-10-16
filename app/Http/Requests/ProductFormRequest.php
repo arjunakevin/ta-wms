@@ -29,7 +29,7 @@ class ProductFormRequest extends FormRequest
         return [
             'code' => 'required|max:255|unique:products,code,' . $product_id,
             'barcode' => 'nullable|sometimes|max:255|unique:products,barcode,' . $product_id,
-            'client_code' => 'required|exists:clients,code',
+            'client_id' => 'required|exists:clients,id',
             'description_1' => 'required',
             'description_2' => 'nullable',
             'is_active' => 'required|boolean'
@@ -37,19 +37,28 @@ class ProductFormRequest extends FormRequest
     }
 
     /**
-     * Configure the validator instance.
+     * Prepare the data for validation.
      *
-     * @param  \Illuminate\Validation\Validator  $validator
      * @return void
      */
-    public function withValidator($validator)
+    public function prepareForValidation()
     {
-        if (!$validator->fails()) {
-            $validator->after(function ($validator) {
-                $this->merge([
-                    'client_id' => Client::whereCode($this->client_code)->firstOrFail()->id,
-                ]);
-            });
-        }
+        $client = Client::whereCode($this->client_code)->first();
+
+        $this->merge([
+            'client_id' => $client ? $client->id : -1
+        ]);
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'client_id' => 'client'
+        ];
     }
 }

@@ -25,7 +25,7 @@ class GoodReceiveFactory extends Factory
         return [
             'inbound_delivery_id' => InboundDelivery::factory(),
             'reference' => 'RCV-' . strtoupper($this->faker->lexify('??????')) . '-' . $this->faker->randomNumber(6),
-            'gr_date' => $this->faker->dateTime(),
+            'receive_date' => $this->faker->dateTime(),
             'notes' => $this->faker->optional()->text(),
             'status' => GoodReceive::STATUS_DRAFT
         ];

@@ -38,6 +38,9 @@
                 <div class="alert alert-danger" role="alert" v-if="errors.message">
                     {{ errors.message }}
                 </div>
+                <div class="alert alert-success" role="alert" v-if="$page.props.flash.message">
+                    {{ $page.props.flash.message }}
+                </div>
                 <form>
                     <div class="form-group row">
                         <label for="id" class="col-sm-2 col-form-label">Good Receive ID</label>
@@ -190,8 +193,16 @@ export default {
             });
         },
         receive() {
-            $('#receive-modal').modal('hide');
-            this.receiving = true;
+            this.$inertia.post(this.$route('grs.receive', this.good_receive), null, {
+                preserveState: false,
+                resetOnSuccess: false,
+                onBefore: () => {
+                    this.receiving = true;
+
+                    $('#receive-modal').modal('hide');
+                },
+                onFinish: () => this.receiving = false
+            });
         }
     }
 }

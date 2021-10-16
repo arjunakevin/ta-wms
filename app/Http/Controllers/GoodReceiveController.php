@@ -183,4 +183,25 @@ class GoodReceiveController extends Controller
 
         return redirect()->route('grs.check', $good_receive);
     }
+
+    public function receive(GoodReceive $good_receive)
+    {
+        if ($good_receive->status == GoodReceive::STATUS_DRAFT) {
+            throw ValidationException::withMessages([
+                'message' => 'Good receive is not checked.'
+            ]);
+        } else if ($good_receive->status >= GoodReceive::STATUS_RECEIVED) {
+            throw ValidationException::withMessages([
+                'message' => 'Good receive is already received.'
+            ]);
+        }
+
+        DB::transaction(function () use ($good_receive) {
+            $good_receive->receive();
+        });
+
+        session()->flash('message', 'Receive success.');
+
+        return redirect()->route('grs.show', $good_receive);
+    }
 }

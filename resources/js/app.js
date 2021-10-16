@@ -23,6 +23,7 @@ const getGrStatus = status => {
     if (status == 1) return 'Draft';
     if (status == 2) return 'Partially Checked';
     if (status == 3) return 'Fully Checked';
+    if (status == 4) return 'Received';
 }
 
 Vue.mixin({

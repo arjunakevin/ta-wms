@@ -13,6 +13,7 @@ class GoodReceive extends Model
     const STATUS_DRAFT = 1;
     const STATUS_PARTIALLY_CHECKED = 2;
     const STATUS_FULLY_CHECKED = 3;
+    const STATUS_RECEIVED = 4;
 
     protected $fillable = [
         'inbound_delivery_id',
@@ -72,6 +73,11 @@ class GoodReceive extends Model
         return $this->hasMany(GoodReceiveDetail::class);
     }
 
+    public function inventories()
+    {
+        return $this->morphMany(Inventory::class, 'documentable');
+    }
+
     public function getReceiveDateAttribute($data)
     {
         if (!$data) {
@@ -92,5 +98,52 @@ class GoodReceive extends Model
         $date = Carbon::parse($original);
 
         return $date->format('Y-m-d') . 'T' . $date->format('H:i');
+    }
+
+    /**
+     * Receive and add stock
+     *
+     * @return void
+     */
+    public function receive()
+    {
+        if (!$this->relationLoaded('details.inbound_delivery_detail')) {
+            $this->load('details.inbound_delivery_detail');
+        }
+    
+        foreach ($this->details as $detail) {
+            if ($detail->check_quantity < $detail->base_quantity) {
+                $detail->inbound_delivery_detail->increment('open_quantity', $detail->check_open_quantity);
+            }
+
+            $this->inventories()->create([
+                'product_id' => $detail->inbound_delivery_detail->product_id,
+                'base_quantity' => $detail->check_quantity,
+                'posting_date' => $this->getRawOriginal('receive_date')
+            ]);
+
+            $detail->update([
+                'receive_quantity' => $detail->check_quantity,
+                'open_putaway_quantity' => $detail->check_quantity
+            ]);
+        }
+
+        $this->updateReceiveStatus();
+
+        $this->updateReceiveStatus();
+
+        $this->inbound_delivery->updateStatus();
+    }
+
+    /**
+     * Update receive status
+     *
+     * @return void
+     */
+    public function updateReceiveStatus()
+    {
+        $this->update([
+            'status' => GoodReceive::STATUS_RECEIVED
+        ]);
     }
 }

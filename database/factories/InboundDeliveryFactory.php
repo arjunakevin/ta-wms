@@ -22,11 +22,13 @@ class InboundDeliveryFactory extends Factory
      */
     public function definition()
     {
+        $date = $this->faker->optional()->dateTime();
+
         return [
             'reference' => 'INB-' . strtoupper($this->faker->lexify('??????')) . '-' . $this->faker->randomNumber(6),
             'client_id' => Client::factory(),
-            'arrival_date' => $this->faker->optional()->dateTime(),
-            'po_date' => $this->faker->optional()->dateTime(),
+            'arrival_date' => $date ? $date->format('Y-m-d H:i:s') : $date,
+            'po_date' => $date ? $date->format('Y-m-d H:i:s') : $date,
             'notes' => $this->faker->optional()->text(),
             'status' => InboundDelivery::STATUS_UNRECEIVED
         ];

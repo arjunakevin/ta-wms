@@ -34,4 +34,9 @@ class GoodReceiveDetail extends Model
     {
         return $this->hasOne(Inventory::class, 'detail_id');
     }
+    
+    public function restoreInboundDeliveryDetailOpenQuantity()
+    {
+        $this->inbound_delivery_detail->increment('open_quantity', $this->base_quantity);
+    }
 }

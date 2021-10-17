@@ -127,7 +127,15 @@ class GoodReceiveController extends Controller
             ]);
         }
 
-        $good_receive->delete();
+        DB::transaction(function () use ($good_receive) {
+            foreach ($good_receive->details as $detail) {
+                $detail->restoreInboundDeliveryDetailOpenQuantity();
+            }
+    
+            $good_receive->delete();
+
+            $good_receive->inbound_delivery->updateStatus();
+        });
 
         return redirect()->route('grs.index');
     }

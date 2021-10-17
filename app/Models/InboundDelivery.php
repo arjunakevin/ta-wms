@@ -46,6 +46,10 @@ class InboundDelivery extends Model
             $this->update([
                 'status' => InboundDelivery::STATUS_PARTIALLY_RECEIVED
             ]);
+        } else {
+            $this->update([
+                'status' => InboundDelivery::STATUS_UNRECEIVED
+            ]);
         }
     }
 

@@ -6,7 +6,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\GoodReceiveController;
+use App\Http\Controllers\MovementOrderController;
 use App\Http\Controllers\InboundDeliveryController;
+use App\Http\Controllers\MovementOrderDetailController;
 use App\Http\Controllers\InboundDeliveryDetailController;
 
 /*
@@ -44,3 +46,12 @@ Route::post('grs/{good_receive}/check', [GoodReceiveController::class, 'submitCh
 Route::post('grs/{good_receive}/receive', [GoodReceiveController::class, 'receive'])->name('grs.receive');
 
 Route::get('inventories', [InventoryController::class, 'index'])->name('inventories.index');
+
+Route::resource('movement_orders', MovementOrderController::class)->except('create');
+Route::get('movement_orders/{type}/{document_id}/create', [MovementOrderController::class, 'create'])->name('movement_orders.create');
+Route::post('movement_orders/document/search', [MovementOrderController::class, 'searchDocument'])->name('movement_orders.document.search');
+Route::post('movement_orders/process/confirm', [MovementOrderController::class, 'confirm'])->name('movement_orders.process.confirm');
+Route::post('movement_orders/process/cancel', [MovementOrderController::class, 'cancel'])->name('movement_orders.process.cancel');
+
+Route::get('movement_order_details/{movement_order}/create', [MovementOrderDetailController::class, 'create'])->name('movement_order_details.create');
+Route::post('movement_order_details/{movement_order}', [MovementOrderDetailController::class, 'store'])->name('movement_order_details.store');

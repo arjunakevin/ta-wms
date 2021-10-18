@@ -20,8 +20,22 @@
         <link rel="stylesheet" href="{{ asset('dashforge/css/dashforge.css') }}">
         <link rel="stylesheet" href="{{ asset('dashforge/css/dashforge.dashboard.css') }}">
 
+        <link href="{{ asset('dashforge/lib/select2/css/select2.min.css') }}" rel="stylesheet">
+
         <link href="{{ mix('/css/app.css') }}" rel="stylesheet" />
         <script src="{{ mix('/js/app.js') }}" defer></script>
+
+        <style>
+            .select2-container .select2-selection--single {
+                height: calc(1.5em + .94rem + 2px);
+            }
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                line-height: calc(1.5em + .94rem + 2px);
+            }
+            .select2 {
+                width: 100% !important;
+            }
+        </style>
     </head>
     <body>
         @routes
@@ -34,9 +48,9 @@
         <script src="{{ asset('dashforge/lib/jquery.flot/jquery.flot.js') }}"></script>
         <script src="{{ asset('dashforge/lib/jquery.flot/jquery.flot.stack.js') }}"></script>
         <script src="{{ asset('dashforge/lib/jquery.flot/jquery.flot.resize.js') }}"></script>
-        <script src="{{ asset('dashforge/lib/chart.js/Chart.bundle.min.js') }}"></script>
         <script src="{{ asset('dashforge/lib/jqvmap/jquery.vmap.min.js') }}"></script>
         <script src="{{ asset('dashforge/lib/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
+        <script src="{{ asset('dashforge/lib/select2/js/select2.min.js') }}"></script>
 
         <script src="{{ asset('dashforge/js/dashforge.js') }}"></script>
         <script src="{{ asset('dashforge/js/dashforge.aside.js') }}"></script>

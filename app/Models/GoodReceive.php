@@ -77,6 +77,16 @@ class GoodReceive extends Model
         return $this->morphMany(Inventory::class, 'documentable');
     }
 
+    public function putaway_list()
+    {
+        return $this->inventories()->where('base_quantity', '>', 0);
+    }
+    
+    public function movement_orders()
+    {
+        return $this->morphMany(MovementOrder::class, 'documentable');
+    }
+
     public function getReceiveDateAttribute($data)
     {
         if (!$data) {

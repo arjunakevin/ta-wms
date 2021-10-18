@@ -109,7 +109,9 @@ class ProductController extends Controller
         $client_id = $request->get('client_id');
 
         $data = Product::where('code', 'like', "%${query}%")
-            ->whereClientId($client_id)
+            ->when($client_id, function ($q) use ($client_id) {
+                $q->whereClientId($client_id);
+            })
             ->limit(15)
             ->get();
 

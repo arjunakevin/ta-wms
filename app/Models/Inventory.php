@@ -37,4 +37,28 @@ class Inventory extends Model
     {
         return $this->belongsTo(Location::class);
     }
+
+    public function createPutMovement(MovementOrder $movement_order, Location $location, int $base_quantity)
+    {
+        $destination_inventory = Inventory::create([
+            'product_id' => $this->product_id,
+            'posting_date' => $this->posting_date,
+            'location_id' => $location->id,
+            'base_quantity' => 0,
+            'pick_quantity' => 0,
+            'put_quantity' => $base_quantity
+        ]);
+
+        $movement_order->details()->create([
+            'is_pick' => 0,
+            'product_id' => $this->product_id,
+            'source_inventory_id' => $this->id,
+            'source_location_id' => $this->documentable_id,
+            'destination_inventory_id' => $destination_inventory->id,
+            'destination_location_id' => $destination_inventory->location_id,
+            'base_quantity' => $base_quantity
+        ]);
+
+        $this->increment('pick_quantity', $base_quantity);
+    }
 }

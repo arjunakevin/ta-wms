@@ -113,7 +113,7 @@ export default {
                 },
                 {
                     label: 'Movement Order',
-                    link: '#',
+                    link: route('movement_orders.index'),
                     icon: 'check-circle'
                 },
                 {

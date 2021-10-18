@@ -42,6 +42,24 @@ Vue.mixin({
             
             return `<span class="badge ${state}">${label}</span>`;
         },
+        getMovementStatusLabel: status => {
+            const state = {
+                '0': 'badge-primary',
+                '1': 'badge-success',
+                '-1': 'badge-danger',
+            };
+
+            const label = {
+                '0': 'Open',
+                '1': 'Confirmed',
+                '-1': 'Canceled',
+            };
+
+            const movementState = state[status];
+            const movementLabel = label[status];
+            
+            return `<span class="badge ${movementState}">${movementLabel}</span>`;
+        },
         getGrStatus: status => getGrStatus(status)
     }
 })

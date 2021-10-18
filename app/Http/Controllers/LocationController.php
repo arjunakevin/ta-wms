@@ -91,4 +91,21 @@ class LocationController extends Controller
 
         return redirect()->route('locations.index');
     }
+
+    /**
+     * Search location for list items.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function list(Request $request)
+    {
+        $query = $request->get('query');
+
+        $data = Location::where('code', 'like', "%${query}%")
+            ->limit(15)
+            ->get();
+
+        return response()->json($data);
+    }
 }

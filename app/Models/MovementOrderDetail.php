@@ -61,6 +61,7 @@ class MovementOrderDetail extends Model
     public function confirm()
     {
         $this->resetInventoryPickPutQuantity();
+        $this->source_inventory->decrement('base_quantity', $this->base_quantity);
         $this->destination_inventory->increment('base_quantity', $this->base_quantity);
 
         $this->update([

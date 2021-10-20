@@ -122,7 +122,7 @@ class GoodReceive extends Model
     
         foreach ($this->details as $detail) {
             if ($detail->check_quantity < $detail->base_quantity) {
-                $detail->inbound_delivery_detail->increment('open_quantity', $detail->check_open_quantity);
+                $detail->inbound_delivery_detail->increment('open_quantity', $detail->open_check_quantity);
             }
 
             $this->inventories()->create([

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\GoodReceiveFormRequest;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\GoodReceiveCheckFormRequest;
+use App\Exceptions\GoodReceiveInboundDeliveryException;
 
 class GoodReceiveController extends Controller
 {
@@ -148,18 +149,24 @@ class GoodReceiveController extends Controller
      */
     public function searchInbound(Request $request)
     {
-        $inbound = InboundDelivery::whereReference($request->reference)
-            ->whereHas('client', function ($q) use ($request) {
-                $q->whereCode($request->client_code);
-            })->first();
+        try {
+            $inbound = InboundDelivery::whereReference($request->reference)
+                ->whereHas('client', function ($q) use ($request) {
+                    $q->whereCode($request->client_code);
+                })->first();
+    
+            if (!$inbound) {
+                throw new GoodReceiveInboundDeliveryException('Inbound delivery data not found.');
+            } else if ($inbound->status == InboundDelivery::STATUS_FULLY_RECEIVED) {
+                throw new GoodReceiveInboundDeliveryException('Inbound delivery is fully received.');
+            }
 
-        if (!$inbound) {
+            return redirect()->route('grs.create', $inbound);
+        } catch (GoodReceiveInboundDeliveryException $e) {
             throw ValidationException::withMessages([
-                'inbound' => 'Inbound delivery data not found.'
+                'inbound' => $e->getMessage()
             ]);
         }
-
-        return redirect()->route('grs.create', $inbound);
     }
 
     /**

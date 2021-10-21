@@ -42,7 +42,7 @@
                                 <label class="custom-control-label" for="check-all">&nbsp;</label>
                             </div>
                         </th>
-                        <th scope="col" style="vertical-align: middle;">
+                        <th scope="col" style="vertical-align: middle; width: 200px" class="text-center">
                             ID
                         </th>
                         <th scope="col" style="vertical-align: middle;">
@@ -74,13 +74,13 @@
                 <tbody>
                     <template v-if="data.data.length">
                         <tr v-for="item in data.data" :key="item.id" style="cursor: pointer" @click="toggleSelected(item.id)">
-                            <td scope="row" style="vertical-align: middle" class="text-center">
+                            <td scope="row" style="vertical-align: middle;" class="text-center">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" :id="`check-${item.id}`" v-model="selected" :value="item.id">
                                     <label class="custom-control-label" :for="`check-${item.id}`">&nbsp;</label>
                                 </div>
                             </td>
-                            <td scope="row" style="vertical-align: middle">
+                            <td scope="row" style="vertical-align: middle;" class="text-center tx-bold">
                                 {{ item.movement_order_id }}
                             </td>
                             <td scope="row" style="vertical-align: middle">

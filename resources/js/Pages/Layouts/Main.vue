@@ -11,7 +11,7 @@
         <div class="aside-body">
             <div class="aside-loggedin">
             <div class="d-flex align-items-center justify-content-start">
-                <a href="" class="avatar"><img src="#" class="rounded-circle" alt=""></a>
+                <a href="" class="avatar"><img src="/profile.png" class="rounded-circle" alt=""></a>
                 <div class="aside-alert-link">
                 <a href="" class="new" data-toggle="tooltip" title="You have 2 unread messages"><i data-feather="message-square"></i></a>
                 <a href="" class="new" data-toggle="tooltip" title="You have 4 new notifications"><i data-feather="bell"></i></a>
@@ -110,6 +110,11 @@ export default {
                     label: 'Inventory List',
                     link: route('inventories.index'),
                     icon: 'archive'
+                },
+                {
+                    label: 'Putaway / Picking',
+                    link: route('movement_orders.list'),
+                    icon: 'file-text'
                 },
                 {
                     label: 'Movement Order',

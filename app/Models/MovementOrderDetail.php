@@ -67,6 +67,12 @@ class MovementOrderDetail extends Model
         $this->update([
             'status' => MovementOrderDetail::STATUS_CONFIRMED
         ]);
+
+        $this->movement_order->document->updateMovementStatus();
+
+        if (!($this->source_inventory->base_quantity || $this->source_inventory->pick_quantity || $this->source_inventory->put_quantity)) {
+            $this->source_inventory->delete();
+        }
     }
 
     /**

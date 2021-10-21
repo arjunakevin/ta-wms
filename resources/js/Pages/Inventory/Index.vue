@@ -34,21 +34,21 @@ export default {
             columnDefs: {
                 header: [
                     { label: 'Product Code' },
+                    { label: 'Description 1' },
                     { label: 'Location Code' },
                     { label: 'Document ID' },
                     { label: 'Base Quantity', style: 'width: 150px', class: 'text-center' },
                     { label: 'Pick Quantity', style: 'width: 150px', class: 'text-center' },
-                    { label: 'Put Quantity', style: 'width: 150px', class: 'text-center' },
-                    { label: 'Posting Date' },
+                    { label: 'Put Quantity', style: 'width: 150px', class: 'text-center' }
                 ],
                 row: [
                     { data: 'product.code', spanClass: 'tx-bold' },
+                    { data: 'product.description_1', render: value => this.limitString(value, 40) },
                     { data: 'location', spanClass: 'tx-bold', render: location => location.code || location },
                     { data: 'documentable_id', tdClass: 'text-center' },
                     { data: 'base_quantity', tdClass: 'text-center' },
                     { data: 'pick_quantity', tdClass: 'text-center' },
-                    { data: 'put_quantity', tdClass: 'text-center' },
-                    { data: 'posting_date' }
+                    { data: 'put_quantity', tdClass: 'text-center' }
                 ]
             }
         }

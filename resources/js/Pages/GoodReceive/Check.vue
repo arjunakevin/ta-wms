@@ -97,7 +97,7 @@ export default {
     },
     computed: {
         completed() {
-            return this.good_receive.status == 3;
+            return this.good_receive.status >= 3 || this.good_receive.status < 0; 
         }
     },
     data() {

@@ -14,6 +14,8 @@ class GoodReceive extends Model
     const STATUS_PARTIALLY_CHECKED = 2;
     const STATUS_FULLY_CHECKED = 3;
     const STATUS_RECEIVED = 4;
+    const STATUS_PARTIAL_PUTAWAY = 4;
+    const STATUS_FULL_PUTAWAY = -1;
 
     protected $fillable = [
         'inbound_delivery_id',
@@ -154,5 +156,21 @@ class GoodReceive extends Model
         $this->update([
             'status' => GoodReceive::STATUS_RECEIVED
         ]);
+    }
+
+    public function updateMovementStatus()
+    {
+        $receive_quantity = $this->details->sum('receive_quantity');
+        $inventory_quantity = $this->inventories->sum('base_quantity');
+
+        if ($inventory_quantity == 0) {
+            $this->update([
+                'status' => GoodReceive::STATUS_FULL_PUTAWAY
+            ]);
+        } else if ($receive_quantity < $inventory_quantity) {
+            $this->update([
+                'status' => GoodReceive::STATUS_PARTIAL_CHECKED
+            ]);
+        }
     }
 }

@@ -79,9 +79,9 @@ class MovementOrderController extends Controller
             $document = GoodReceive::findOrFail($request->document_id);
         }
 
-        $document->movement_orders()->create($request->validated());
+        $movement_order = $document->movement_orders()->create($request->validated());
 
-        return redirect()->route('movement_order_details.create');
+        return redirect()->route('movement_order_details.create', $movement_order);
     }
 
     /**
@@ -160,6 +160,16 @@ class MovementOrderController extends Controller
     }
 
     /**
+     * Display a listing of the resource (putaway / picking).
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function list()
+    {
+        return inertia()->render('MovementOrder/List');
+    }
+
+    /**
      * Search document for movement order
      *
      * @param Request $request
@@ -211,7 +221,7 @@ class MovementOrderController extends Controller
                 $movement->$process();
             });
 
-            return $movements->count();;
+            return $movements->count();
         });
     }
 }

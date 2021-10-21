@@ -66,7 +66,7 @@ class MovementOrderDetailFormRequest extends FormRequest
             if (!$inventory) {
                 $validator->errors()->add('product_id', 'The selected product is invalid.');
             } else if ($inventory->available_pick_quantity <= 0) {
-                $validator->errors()->add('product_id', 'The selected product is fully checked.');
+                $validator->errors()->add('product_id', 'The selected product has no putaway outstanding.');
             } else if ($inventory->available_pick_quantity < $this->base_quantity) {
                 $validator->errors()->add('base_quantity', "Base quantity can't be greater than remaining quantity (Remaining: {$inventory->available_pick_quantity}).");
             } else {

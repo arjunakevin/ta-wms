@@ -14,16 +14,26 @@ Vue.prototype.$route = route;
 Vue.component('vue-typeahead-bootstrap', VueTypeaheadBootstrap);
 
 const getInboundStatus = status => {
-    if (status == 1) return 'Unreceived';
-    if (status == 2) return 'Partially Received';
-    if (status == -99) return 'Fully Received';
+    const label  = {
+        '1': 'Unreceived',
+        '2': 'Partially Received',
+        '-1': 'Fully Received'
+    };
+
+    return label[status];
 }
 
 const getGrStatus = status => {
-    if (status == 1) return 'Draft';
-    if (status == 2) return 'Partially Checked';
-    if (status == 3) return 'Fully Checked';
-    if (status == 4) return 'Received';
+    const label = {
+        '1': 'Draft',
+        '2': 'Partially Checked',
+        '3': 'Fully Checked',
+        '4': 'Received',
+        '5': 'Partial Putaway',
+        '-1': 'Full Putaway',
+    };
+
+    return label[status];
 }
 
 Vue.mixin({
@@ -37,10 +47,19 @@ Vue.mixin({
         },
         getInboundStatus: status => getInboundStatus(status),
         getGrStatusLabel: status => {
-            const state = status > 0 ? 'badge-primary' : 'badge-success';
-            let label = getGrStatus(status);
+            const state = {
+                '1': 'badge-primary',
+                '2': 'badge-primary',
+                '3': 'badge-primary',
+                '4': 'badge-info',
+                '5': 'badge-warning',
+                '-1': 'badge-success',
+            };
+
+            const grState = state[status];
+            const grLabel = getGrStatus(status);
             
-            return `<span class="badge ${state}">${label}</span>`;
+            return `<span class="badge ${grState}">${grLabel}</span>`;
         },
         getMovementStatusLabel: status => {
             const state = {

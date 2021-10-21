@@ -51,6 +51,7 @@
         <script src="{{ asset('dashforge/lib/jqvmap/jquery.vmap.min.js') }}"></script>
         <script src="{{ asset('dashforge/lib/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
         <script src="{{ asset('dashforge/lib/select2/js/select2.min.js') }}"></script>
+        <script src="{{ asset('dashforge/lib/chart.js/Chart.bundle.min.js') }}"></script>
 
         <script src="{{ asset('dashforge/js/dashforge.js') }}"></script>
         <script src="{{ asset('dashforge/js/dashforge.aside.js') }}"></script>

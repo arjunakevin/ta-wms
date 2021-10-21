@@ -206,7 +206,7 @@ class GoodReceiveController extends Controller
             throw ValidationException::withMessages([
                 'message' => 'Good receive is not checked.'
             ]);
-        } else if ($good_receive->status >= GoodReceive::STATUS_RECEIVED) {
+        } else if ($good_receive->status >= GoodReceive::STATUS_RECEIVED || $good_receive->status == GoodReceive::STATUS_FULL_PUTAWAY) {
             throw ValidationException::withMessages([
                 'message' => 'Good receive is already received.'
             ]);

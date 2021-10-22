@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use Tests\Base;
 use App\Models\Client;
 use App\Models\Product;
 use Inertia\Testing\Assert;
@@ -11,7 +11,7 @@ use App\Models\InboundDeliveryDetail;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class InboundDeliveryTest extends TestCase
+class InboundDeliveryTest extends Base
 {
     use RefreshDatabase;
     

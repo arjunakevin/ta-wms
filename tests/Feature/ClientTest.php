@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use Tests\Base;
 use App\Models\Client;
 use Inertia\Testing\Assert;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ClientTest extends TestCase
+class ClientTest extends Base
 {
     use RefreshDatabase;
     

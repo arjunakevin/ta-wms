@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use Tests\Base;
 use App\Models\GoodReceive;
 use Inertia\Testing\Assert;
 use App\Models\InboundDelivery;
@@ -10,7 +10,7 @@ use App\Models\InboundDeliveryDetail;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class GoodReceiveTest extends TestCase
+class GoodReceiveTest extends Base
 {
     use RefreshDatabase;
     

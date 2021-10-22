@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use Tests\Base;
 use App\Models\Inventory;
 use App\Models\GoodReceive;
 use Inertia\Testing\Assert;
@@ -11,7 +11,7 @@ use App\Models\MovementOrderDetail;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class MovementOrderTest extends TestCase
+class MovementOrderTest extends Base
 {
     use RefreshDatabase;
     

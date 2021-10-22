@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use Tests\Base;
 use App\Models\Client;
 use App\Models\Product;
 use Inertia\Testing\Assert;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ProductTest extends TestCase
+class ProductTest extends Base
 {
     use RefreshDatabase;
     

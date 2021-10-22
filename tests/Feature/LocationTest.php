@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use Tests\Base;
 use App\Models\Location;
 use Inertia\Testing\Assert;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class LocationTest extends TestCase
+class LocationTest extends Base
 {
     use RefreshDatabase;
     

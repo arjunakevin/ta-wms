@@ -59,7 +59,7 @@ class MovementOrderController extends Controller
 
         if ($type == MovementOrder::TYPE_PUTAWAY) {
             $document = GoodReceive::findOrFail($document_id);
-            $inventories = $document->inventories()->with('product')->paginate();
+            $inventories = $document->inventories()->with('product')->get();
         }
 
         return inertia()->render('MovementOrder/Form', compact('type', 'document', 'inventories'));

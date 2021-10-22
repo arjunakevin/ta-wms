@@ -197,7 +197,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        <Pagination :data="details"/>
                     </div>
                 </div>
             </div>
@@ -227,13 +226,11 @@
 <script>
 import { Link } from '@inertiajs/inertia-vue';
 import { debounce } from 'lodash';
-import Pagination from '../../Components/Pagination';
 
 export default {
     props: ['inbound', 'details', 'errors'],
     components: {
-        Link,
-        Pagination
+        Link
     },
     data() {
         return {
@@ -356,7 +353,7 @@ export default {
                     this.editing = false;
                     this.detailFormIndex = null;
 
-                    this.form.details = this.mapDetails(res.props.details.data);
+                    this.form.details = this.mapDetails(res.props.details);
                 },
                 onError: () => data.submitting = false
             };
@@ -442,7 +439,7 @@ export default {
                 po_date: this.inbound.po_date_formatted,
                 notes: this.inbound.notes,
                 status: this.getInboundStatus(this.inbound.status),
-                details: this.mapDetails(this.details.data)
+                details: this.mapDetails(this.details)
             });
 
             this.selected_client = this.inbound.client;

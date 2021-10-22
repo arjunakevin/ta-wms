@@ -168,7 +168,7 @@ export default {
                     { data: 'open_putaway_quantity', tdClass: 'text-center' }
                 ]
             },
-            formattedDetails: this.details.data.map(detail => {
+            formattedDetails: this.details.map(detail => {
                 return {
                     line_id: detail.inbound_delivery_detail.line_id,
                     product_code: detail.inbound_delivery_detail.product.code,

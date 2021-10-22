@@ -18,7 +18,7 @@ class MovementOrderDetailController extends Controller
      */
     public function create(MovementOrder $movement_order)
     {
-        $inventories = $movement_order->document->inventories()->with('product')->paginate();
+        $inventories = $movement_order->document->inventories()->with('product')->get();
 
         return inertia()->render('MovementOrder/Detail', compact('movement_order', 'inventories'));
     }

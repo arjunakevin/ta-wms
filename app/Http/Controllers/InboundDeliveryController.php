@@ -57,7 +57,7 @@ class InboundDeliveryController extends Controller
     {
         $inbound->load('client');
 
-        $details = $inbound->details()->with('product')->orderBy('id')->paginate();
+        $details = $inbound->details()->with('product')->orderBy('id')->get();
 
         return inertia()->render('InboundDelivery/Detail', compact('inbound', 'details'));
     }
@@ -72,7 +72,7 @@ class InboundDeliveryController extends Controller
     {
         $inbound->load('client');
 
-        $details = $inbound->details()->with('product')->orderBy('id')->paginate();
+        $details = $inbound->details()->with('product')->orderBy('id')->get();
         
         return inertia()->render('InboundDelivery/Form', compact('inbound', 'details'));
     }

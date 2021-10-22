@@ -98,7 +98,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="detail in details.data" :key="`line-${detail.line_id}`">
+                                <tr v-for="detail in details" :key="`line-${detail.line_id}`">
                                     <td scope="row" style="vertical-align: middle" class="text-center">
                                         <span class="tx-bold">
                                             {{ detail.line_id }}
@@ -122,7 +122,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <Pagination :data="details"/>
                 </form>
             </div>
         </div>
@@ -151,13 +150,11 @@
 
 <script>
 import { Link } from '@inertiajs/inertia-vue';
-import Pagination from '../../Components/Pagination';
 
 export default {
     props: ['inbound', 'details', 'errors'],
     components: {
-        Link,
-        Pagination
+        Link
     },
     data() {
         return {

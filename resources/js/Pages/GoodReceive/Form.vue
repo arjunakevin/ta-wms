@@ -91,7 +91,6 @@
                     <div>
                         <hr>
                         <Table :data="formattedDetails" :columnDefs="columnDefs"/>
-                        <Pagination :data="details"/>
                     </div>
                 </div>
             </div>
@@ -101,14 +100,12 @@
 
 <script>
 import { Link } from '@inertiajs/inertia-vue';
-import Pagination from '../../Components/Pagination';
 import Table from '../../Components/Table';
 
 export default {
     props: ['good_receive', 'inbound', 'details', 'errors'],
     components: {
         Link,
-        Pagination,
         Table
     },
     data() {
@@ -125,7 +122,7 @@ export default {
     computed: {
         formattedDetails() {
             if (this.good_receive) {
-                return this.details.data.map(detail => {
+                return this.details.map(detail => {
                     return {
                         line_id: detail.inbound_delivery_detail.line_id,
                         product_code: detail.inbound_delivery_detail.product.code,
@@ -138,7 +135,7 @@ export default {
                 });
             }
 
-            return this.details.data.map(detail => {
+            return this.details.map(detail => {
                 return {
                     line_id: detail.line_id,
                     product_code: detail.product.code,

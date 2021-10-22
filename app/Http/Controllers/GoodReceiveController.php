@@ -36,7 +36,7 @@ class GoodReceiveController extends Controller
     {
         $details = $inbound->open_details()
             ->with('product')
-            ->paginate();
+            ->get();
 
         $inbound->load('client');
 
@@ -79,7 +79,7 @@ class GoodReceiveController extends Controller
 
         $details = $good_receive->details()
             ->with('inbound_delivery_detail.product', 'inventory')
-            ->paginate();
+            ->get();
 
         return inertia()->render('GoodReceive/Detail', compact('good_receive', 'details'));
     }
@@ -95,7 +95,7 @@ class GoodReceiveController extends Controller
         $inbound = $good_receive->inbound_delivery->load('client');
         $details = $good_receive->details()
             ->with('inbound_delivery_detail.product')
-            ->paginate();
+            ->get();
 
         return inertia()->render('GoodReceive/Form', compact('good_receive', 'inbound', 'details'));
     }

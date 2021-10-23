@@ -42,7 +42,8 @@ class InboundDeliveryDetailFormRequest extends FormRequest
                     $q->whereInboundDeliveryId($this->inbound_delivery_id);
                 })->ignore($this->id, 'id')
             ],
-            'base_quantity' => 'required|numeric|gt:0',
+            'base_quantity' => 'required|numeric|min:1',
+            'open_quantity' => 'required|numeric|gte:0'
         ];
     }
 
@@ -58,7 +59,10 @@ class InboundDeliveryDetailFormRequest extends FormRequest
 
         $this->merge([
             'client_id' => $inbound ? $inbound->client_id : -1,
-            'product_id' => $product ? $product->id : -1
+            'product_id' => $product ? $product->id : -1,
+            'open_quantity' => $this->detail
+                ? ($this->base_quantity - $this->detail->base_quantity) + $this->detail->open_quantity
+                : $this->base_quantity
         ]);
     }
 

@@ -188,9 +188,10 @@
                                             <td scope="row" style="vertical-align: middle">
                                                 <small class="text-danger text-left" v-if="errors.base_quantity">{{ errors.base_quantity }}</small>
                                             </td>
-                                            <td scope="row" style="vertical-align: middle" class="text-center">
+                                            <td scope="row" style="vertical-align: middle">
+                                                <small class="text-danger text-left" v-if="errors.open_quantity">{{ errors.open_quantity }}</small>
                                             </td>
-                                            <td scope="row" style="vertical-align: middle" class="text-center">
+                                            <td scope="row" style="vertical-align: middle">
                                             </td>
                                         </tr>
                                     </template>
@@ -258,7 +259,7 @@ export default {
             return this.editForm || this.editing;
         },
         hasDetailError() {
-            const keys = ['line_id', 'product_id', 'base_quantity'];
+            const keys = ['line_id', 'product_id', 'base_quantity', 'open_quantity'];
 
             for (const key in this.errors) {
                 if (keys.includes(key)) {
@@ -410,7 +411,11 @@ export default {
             }
         },
         setOpenQuantity(product) {
-            product.open_quantity = product.base_quantity;
+            if (product.id) {
+                product.open_quantity = (product.base_quantity - product.original_base_quantity) + product.original_open_quantity;
+            } else {
+                product.open_quantity = product.base_quantity;
+            }
         },
         mapDetails(details) {
             return details.map(detail => {
@@ -419,7 +424,9 @@ export default {
                     line_id: detail.line_id,
                     code: detail.product.code,
                     base_quantity: detail.base_quantity,
+                    original_base_quantity: detail.base_quantity,
                     open_quantity: detail.open_quantity,
+                    original_open_quantity: detail.open_quantity,
                     selected: detail.product,
                     editing: false,
                     submitting: false,

@@ -120,10 +120,7 @@ class InboundDeliveryController extends Controller
      */
     public function storeDetail(InboundDeliveryDetailFormRequest $request)
     {
-        $data = $request->validated();
-        $data['open_quantity'] = $data['base_quantity'];
-        
-        $detail = InboundDeliveryDetail::create($data);
+        $detail = InboundDeliveryDetail::create($request->validated());
 
         return redirect()->route('inbounds.edit', $detail->inbound_delivery);
     }

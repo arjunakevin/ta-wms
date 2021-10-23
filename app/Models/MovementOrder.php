@@ -22,9 +22,9 @@ class MovementOrder extends Model
     const TYPE_PUTAWAY = 1;
     const TYPE_PICKING = 2;
 
-    public function document()
+    public function documentable()
     {
-        return $this->morphTo('documentable');
+        return $this->morphTo();
     }
 
     public function details()

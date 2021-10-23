@@ -63,6 +63,8 @@
                 </form>
             </div>
         </div>
+        <Table :data="data" :columnDefs="columnDefs"/>
+        <Pagination :data="data"/>
     </div>
 </template>
 
@@ -93,6 +95,22 @@ export default {
                 type: 1,
                 id: ''
             }),
+            columnDefs: {
+                header: [
+                    { label: 'ID', style: 'width: 200px', class: 'text-center' },
+                    { label: 'Reference' },
+                    { label: 'Date' },
+                    { label: 'Line Count', style: 'width: 200px', class: 'text-center' },
+                    { label: 'Type', style: 'width: 200px', class: 'text-center' }
+                ],
+                row: [
+                    { data: 'id', tdClass: 'text-center' },
+                    { data: 'reference', spanClass: 'tx-bold' },
+                    { data: 'date' },
+                    { data: 'details_count', tdClass: 'text-center' },
+                    { data: 'type', tdClass: 'text-center' }
+                ]
+            }
         }
     },
     methods: {

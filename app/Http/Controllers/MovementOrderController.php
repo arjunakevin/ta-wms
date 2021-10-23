@@ -166,7 +166,21 @@ class MovementOrderController extends Controller
      */
     public function list()
     {
-        return inertia()->render('MovementOrder/List');
+        $data = MovementOrder::withCount('details')
+            ->with('documentable')
+            ->paginate();
+
+        $data->getCollection()->transform(function ($data) {
+            if ($data->documentable instanceof GoodReceive) {
+                $data->type = 'Put';
+            } else {
+                $data->type = 'Pick';
+            }
+
+            return $data;
+        });
+
+        return inertia()->render('MovementOrder/List', compact('data'));
     }
 
     /**

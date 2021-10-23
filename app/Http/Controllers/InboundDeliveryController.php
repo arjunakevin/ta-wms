@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\InboundDelivery;
 use Illuminate\Support\Facades\DB;
+use App\Models\InboundDeliveryDetail;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\InboundDeliveryFormRequest;
+use App\Http\Requests\InboundDeliveryDetailFormRequest;
 
 class InboundDeliveryController extends Controller
 {
@@ -108,5 +110,48 @@ class InboundDeliveryController extends Controller
         $inbound->delete();
 
         return redirect()->route('inbounds.index');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  App\Http\Requests\InboundDeliveryDetailFormRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeDetail(InboundDeliveryDetailFormRequest $request)
+    {
+        $data = $request->validated();
+        $data['open_quantity'] = $data['base_quantity'];
+        
+        $detail = InboundDeliveryDetail::create($data);
+
+        return redirect()->route('inbounds.edit', $detail->inbound_delivery);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  App\Http\Requests\InboundDeliveryDetailFormRequest  $request
+     * @param  \App\Models\InboundDeliveryDetail  $detail
+     * @return \Illuminate\Http\Response
+     */
+    public function updateDetail(InboundDeliveryDetailFormRequest $request, InboundDeliveryDetail $detail)
+    {
+        $detail->update($request->validated());
+
+        return redirect()->route('inbounds.edit', $detail->inbound_delivery);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\InboundDeliveryDetail  $detail
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyDetail(InboundDeliveryDetail $detail)
+    {
+        $detail->delete();
+
+        return redirect()->route('inbounds.edit', $detail->inbound_delivery);
     }
 }

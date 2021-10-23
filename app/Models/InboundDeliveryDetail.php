@@ -31,4 +31,9 @@ class InboundDeliveryDetail extends Model
     {
         return $query->where('open_quantity', '>=', 1);
     }
+
+    public function isReceived()
+    {
+        return $this->base_quantity != $this->open_quantity;
+    }
 }

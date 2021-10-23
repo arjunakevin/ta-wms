@@ -93,7 +93,7 @@
                         <div class="form-group row">
                             <label for="status" class="col-sm-2 col-form-label">Status</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="status" placeholder="Status" v-model="form.status" disabled>
+                                <input type="text" class="form-control" id="status" placeholder="Status" v-model="status" disabled>
                             </div>
                         </div>
                     </div>
@@ -128,7 +128,7 @@
                                     <template v-for="(detail, i) in form.details">
                                         <tr :key="`line-${i}`">
                                             <td scope="row" style="vertical-align: middle">
-                                                <input type="text" class="form-control" v-model="detail.line_id" placeholder="Line ID" :disabled="!detail.editing">
+                                                <input type="text" class="form-control" v-model="detail.line_id" placeholder="Line ID" :disabled="!detail.editing" @keyup.enter="saveDetail(detail, i)">
                                             </td>
                                             <td scope="row" style="vertical-align: middle">
                                                 <vue-typeahead-bootstrap
@@ -140,20 +140,21 @@
                                                     :serializer="item => item.code"
                                                     @hit="setProduct($event, detail)"
                                                     :disabled="!detail.editing"
+                                                    @keyup.enter="saveDetail(detail, i)"
                                                 />
                                             </td>
                                             <td scope="row" style="vertical-align: middle">
                                                 <input type="text" class="form-control" v-model="detail.selected.description_1" placeholder="Description 1" disabled>
                                             </td>
                                             <td scope="row" style="vertical-align: middle" class="text-center">
-                                                <input type="number" class="form-control" v-model="detail.base_quantity" placeholder="Base Quantity" @input="setOpenQuantity(detail)" :disabled="!detail.selected.id || !detail.editing">
+                                                <input type="number" class="form-control" v-model="detail.base_quantity" placeholder="Base Quantity" @input="setOpenQuantity(detail)" :disabled="!detail.selected.id || !detail.editing" @keyup.enter="saveDetail(detail, i)">
                                             </td>
                                             <td scope="row" style="vertical-align: middle" class="text-center">
                                                 <input type="number" class="form-control" v-model="detail.open_quantity" placeholder="Open Quantity" disabled>
                                             </td>
                                             <td scope="row" style="vertical-align: middle" class="text-center">
                                                 <div class="d-flex">
-                                                    <button type="button" class="btn btn-success btn-icon mg-r-5" @click="saveDetail(detail)" v-show="detail.editing && !detail.submitting" :disabled="editing && !detail.editing">
+                                                    <button type="button" class="btn btn-success btn-icon mg-r-5" @click="saveDetail(detail, i)" v-show="detail.editing && !detail.submitting" :disabled="editing && !detail.editing">
                                                         <i data-feather="check"></i>
                                                     </button>
                                                     <button v-show="detail.editing && detail.submitting" class="btn btn-success btn-icon mg-r-5" type="button" disabled>
@@ -255,6 +256,11 @@ export default {
         }
     },
     computed: {
+        status() {
+            const status = this.inbound ? this.inbound.status : 1;
+
+            return this.getInboundStatus(status);
+        },
         disableAddDetailButton() {
             return this.editForm || this.editing;
         },
@@ -318,6 +324,8 @@ export default {
             }, 1);
         },
         addDetail() {
+            this.detailFormIndex = null;
+
             this.editing = true;
 
             this.form.details.push({
@@ -332,13 +340,11 @@ export default {
                 deleting: false
             });
 
-            this.detailFormIndex = this.form.details.length - 1;
-
             setTimeout(() => {
                 feather.replace();
             }, 1);
         },
-        saveDetail(data) {
+        saveDetail(data, index) {
             data.submitting = true;
 
             const formData = {
@@ -356,7 +362,10 @@ export default {
 
                     this.form.details = this.mapDetails(res.props.details);
                 },
-                onError: () => data.submitting = false
+                onError: () => {
+                    data.submitting = false;
+                    this.detailFormIndex = index;
+                }
             };
 
             if (data.id) {
@@ -392,8 +401,6 @@ export default {
         },
         deleteDetail() {
             const options = {
-                preserveState: false,
-                resetOnSuccess: false,
                 onBefore: () => {
                     $('#delete-detail-modal').modal('hide');
                     this.deleteDetailData.deleting = true;
@@ -401,12 +408,20 @@ export default {
                 onSuccess: () => {
                     this.form.details.splice(this.deleteDetailIndex, 1);
                     this.editing = false;
+                    this.detailFormIndex = null;
+                },
+                onError: () => {
+                    this.deleteDetailData.deleting = false;
+                    this.detailFormIndex = this.deleteDetailIndex;
                 }
             };
             
             if (this.deleteDetailData.id) {
                 this.$inertia.delete(this.$route('inbound_details.destroy', this.deleteDetailData.id), options);
             } else {
+                options.preserveState = false;
+                options.resetOnSuccess = false;
+
                 this.$inertia.reload(options);
             }
         },

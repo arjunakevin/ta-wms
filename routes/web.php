@@ -39,7 +39,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('inbounds', InboundDeliveryController::class);
     Route::post('inbound_details', [InboundDeliveryController::class, 'storeDetail'])->name('inbound_details.store');
     Route::put('inbound_details/{detail}', [InboundDeliveryController::class, 'updateDetail'])->name('inbound_details.update');
-    Route::delete('inbound_details/{detail}', [InboundDeliveryController::class, 'deleteDetail'])->name('inbound_details.destroy');
+    Route::delete('inbound_details/{detail}', [InboundDeliveryController::class, 'destroyDetail'])->name('inbound_details.destroy');
     
     Route::resource('grs', GoodReceiveController::class)
         ->parameter('grs', 'good_receive')

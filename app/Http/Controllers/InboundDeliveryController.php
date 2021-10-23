@@ -75,7 +75,7 @@ class InboundDeliveryController extends Controller
         $inbound->load('client');
 
         $details = $inbound->details()->with('product')->orderBy('id')->get();
-        
+
         return inertia()->render('InboundDelivery/Form', compact('inbound', 'details'));
     }
 
@@ -122,6 +122,8 @@ class InboundDeliveryController extends Controller
     {
         $detail = InboundDeliveryDetail::create($request->validated());
 
+        $detail->inbound_delivery->updateStatus();
+
         return redirect()->route('inbounds.edit', $detail->inbound_delivery);
     }
 
@@ -136,6 +138,8 @@ class InboundDeliveryController extends Controller
     {
         $detail->update($request->validated());
 
+        $detail->inbound_delivery->updateStatus();
+
         return redirect()->route('inbounds.edit', $detail->inbound_delivery);
     }
 
@@ -147,7 +151,15 @@ class InboundDeliveryController extends Controller
      */
     public function destroyDetail(InboundDeliveryDetail $detail)
     {
+        if ($detail->isReceived()) {
+            throw ValidationException::withMessages([
+                'line_id' => 'This line is already received.'
+            ]);
+        }
+
         $detail->delete();
+
+        $detail->inbound_delivery->updateStatus();
 
         return redirect()->route('inbounds.edit', $detail->inbound_delivery);
     }

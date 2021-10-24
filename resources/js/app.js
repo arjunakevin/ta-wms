@@ -38,7 +38,15 @@ const getGrStatus = status => {
 
 Vue.mixin({
     methods: {
-        limitString: (str, limit = 100) => str.substring(0, limit) + '...',
+        limitString: (str, limit = 100) => {
+            let res = str.substring(0, limit);
+
+            if (str.length > limit) {
+                res += '...';
+            }
+
+            return res;
+        },
         getInboundStatusLabel: status => {
             const state = status > 0 ? 'badge-primary' : 'badge-success';
             let label = getInboundStatus(status);

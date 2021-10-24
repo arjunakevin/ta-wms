@@ -18,7 +18,7 @@ class MovementOrderDetailController extends Controller
      */
     public function create(MovementOrder $movement_order)
     {
-        $inventories = $movement_order->document->inventories()->with('product')->get();
+        $inventories = $movement_order->documentable->inventories()->with('product')->get();
 
         return inertia()->render('MovementOrder/Detail', compact('movement_order', 'inventories'));
     }
@@ -37,6 +37,8 @@ class MovementOrderDetailController extends Controller
                 Location::findOrFail($request->location_id),
                 $request->base_quantity
             );
+
+            $movement_order->documentable->updateMovementStatus();
         });
 
         return redirect()->route('movement_order_details.create', $movement_order);

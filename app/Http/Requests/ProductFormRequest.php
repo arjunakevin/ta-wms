@@ -32,6 +32,7 @@ class ProductFormRequest extends FormRequest
             'client_id' => 'required|exists:clients,id',
             'description_1' => 'required',
             'description_2' => 'nullable',
+            'uom_name' => 'required|max:255',
             'is_active' => 'required|boolean'
         ];
     }

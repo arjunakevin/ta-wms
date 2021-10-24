@@ -49,7 +49,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('grs/{good_receive}/check', [GoodReceiveController::class, 'check'])->name('grs.check');
     Route::post('grs/{good_receive}/check', [GoodReceiveController::class, 'submitCheck'])->name('grs.check.submit');
     Route::post('grs/{good_receive}/receive', [GoodReceiveController::class, 'receive'])->name('grs.receive');
-    Route::get('grs/{good_receive}/print', [GoodReceiveController::class, 'print'])->name('grs.receive');
+    Route::get('grs/{good_receive}/print', [GoodReceiveController::class, 'print'])->name('grs.print');
     
     Route::get('inventories', [InventoryController::class, 'index'])->name('inventories.index');
     

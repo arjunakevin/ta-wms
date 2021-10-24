@@ -33,13 +33,14 @@ export default {
         return {
             columnDefs: {
                 header: [
-                    { label: 'Product Code' },
+                    { label: 'Product Code', style: 'width: 200px' },
                     { label: 'Description 1' },
-                    { label: 'Location Code' },
-                    { label: 'Document ID' },
-                    { label: 'Base Quantity', style: 'width: 150px', class: 'text-center' },
-                    { label: 'Pick Quantity', style: 'width: 150px', class: 'text-center' },
-                    { label: 'Put Quantity', style: 'width: 150px', class: 'text-center' }
+                    { label: 'Location Code', style: 'width: 200px' },
+                    { label: 'Document ID', style: 'width: 200px' },
+                    { label: 'Base Quantity', style: 'width: 130px', class: 'text-center' },
+                    { label: 'Pick Quantity', style: 'width: 130px', class: 'text-center' },
+                    { label: 'Put Quantity', style: 'width: 130px', class: 'text-center' },
+                    { label: 'UoM Name', style: 'width: 100px' }
                 ],
                 row: [
                     { data: 'product.code', spanClass: 'tx-bold' },
@@ -48,7 +49,8 @@ export default {
                     { data: 'documentable_id', tdClass: 'text-center' },
                     { data: 'base_quantity', tdClass: 'text-center' },
                     { data: 'pick_quantity', tdClass: 'text-center' },
-                    { data: 'put_quantity', tdClass: 'text-center' }
+                    { data: 'put_quantity', tdClass: 'text-center' },
+                    { data: 'product.uom_name' }
                 ]
             }
         }

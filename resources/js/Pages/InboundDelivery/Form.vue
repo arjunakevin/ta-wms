@@ -119,6 +119,9 @@
                                         <th scope="col" style="width: 150px" class="text-center">
                                             Open Quantity
                                         </th>
+                                        <th scope="col" style="width: 150px" class="text-center">
+                                            UoM Name
+                                        </th>
                                         <th scope="col" style="width: 100px" class="text-center">
                                             Action
                                         </th>
@@ -151,6 +154,9 @@
                                             </td>
                                             <td scope="row" style="vertical-align: middle" class="text-center">
                                                 <input type="number" class="form-control" v-model="detail.open_quantity" placeholder="Open Quantity" disabled>
+                                            </td>
+                                            <td scope="row" style="vertical-align: middle">
+                                                <input type="text" class="form-control" v-model="detail.selected.uom_name" placeholder="UoM Name" disabled>
                                             </td>
                                             <td scope="row" style="vertical-align: middle" class="text-center">
                                                 <div class="d-flex">

@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('barcode')->nullable()->unique();
             $table->text('description_1');
             $table->text('description_2')->nullable();
+            $table->string('uom_name');
             $table->boolean('is_active')->default(1);
             $table->timestamps();
         });

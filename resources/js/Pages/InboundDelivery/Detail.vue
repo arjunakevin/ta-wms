@@ -95,6 +95,9 @@
                                     <th scope="col" style="width: 150px" class="text-center">
                                         Open Quantity
                                     </th>
+                                    <th scope="col" style="width: 150px">
+                                        UoM Name
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -117,6 +120,9 @@
                                     </td>
                                     <td scope="row" style="vertical-align: middle" class="text-center">
                                         {{ detail.open_quantity }}
+                                    </td>
+                                    <td scope="row" style="vertical-align: middle">
+                                        {{ detail.product.uom_name }}
                                     </td>
                                 </tr>
                             </tbody>

@@ -73,13 +73,15 @@ class MovementOrderController extends Controller
      */
     public function store(MovementOrderFormRequest $request)
     {
-        $document = null;
-
-        if ($request->type == MovementOrder::TYPE_PUTAWAY) {
-            $document = GoodReceive::findOrFail($request->document_id);
-        }
-
-        $movement_order = $document->movement_orders()->create($request->validated());
+        $movement_order = DB::transaction(function () use ($request) {
+            $document = null;
+    
+            if ($request->type == MovementOrder::TYPE_PUTAWAY) {
+                $document = GoodReceive::findOrFail($request->document_id);
+            }
+    
+            return $document->movement_orders()->create($request->validated());
+        });
 
         return redirect()->route('movement_order_details.create', $movement_order);
     }

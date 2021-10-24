@@ -57,7 +57,7 @@ class MovementOrderDetailFormRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $inventory = $this->movement_order->document->inventories()
+            $inventory = $this->movement_order->documentable->inventories()
                 ->whereHas('product', function ($q) {
                     $q->whereId($this->product_id);
                 })

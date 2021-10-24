@@ -115,6 +115,7 @@ export default {
                     { label: 'Base Quantity', style: 'width: 50px', class: 'text-center' },
                     { label: 'Check Quantity', style: 'width: 50px', class: 'text-center' },
                     { label: 'Remaining Quantity', style: 'width: 50px', class: 'text-center' },
+                    { label: 'UoM Name', style: 'width: 50px' }
                 ],
                 row: [
                     { data: 'inbound_delivery_detail.line_id', tdClass: 'text-center' },
@@ -123,6 +124,7 @@ export default {
                     { data: 'base_quantity', tdClass: 'text-center' },
                     { data: 'check_quantity', tdClass: 'text-center' },
                     { data: 'open_check_quantity', tdClass: 'text-center' },
+                    { data: 'inbound_delivery_detail.product.uom_name' }
                 ]
             },
             products: []

@@ -82,6 +82,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label for="uom_name" class="col-sm-2 col-form-label">UoM Name <span class="text-danger">*</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="uom_name" placeholder="UoM Name" v-model="form.uom_name">
+                            <small class="text-danger" v-if="errors.uom_name">{{ errors.uom_name }}</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-form-label col-sm-2 pt-0">Status <span class="text-danger">*</span></label>
                         <div class="col-sm-10">
                             <div class="custom-control custom-radio">
@@ -118,6 +125,7 @@ export default {
                 client_code: '',
                 description_1: '',
                 description_2: '',
+                uom_name: '',
                 is_active: 1
             }),
             clients: [],

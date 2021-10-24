@@ -28,6 +28,7 @@ class ProductFactory extends Factory
             'barcode' => $this->faker->unique()->randomNumber(8),
             'description_1' => $this->faker->text(),
             'description_2' => $this->faker->optional()->text(),
+            'uom_name' => strtoupper($this->faker->word()),
             'is_active' => $this->faker->boolean()
         ];
     }

@@ -130,7 +130,8 @@ export default {
                         base_quantity: detail.base_quantity,
                         receive_quantity: detail.receive_quantity,
                         open_check_quantity: detail.open_check_quantity,
-                        open_putaway_quantity: 0
+                        open_putaway_quantity: 0,
+                        product_uom_name: detail.inbound_delivery_detail.product.uom_name
                     }
                 });
             }
@@ -141,7 +142,8 @@ export default {
                     product_code: detail.product.code,
                     product_description: detail.product.description_1,
                     inbound_base_quantity: detail.open_quantity,
-                    base_quantity: detail.open_quantity
+                    base_quantity: detail.open_quantity,
+                    product_uom_name: detail.product.uom_name
                 }
             });
         },
@@ -156,6 +158,7 @@ export default {
                         { label: 'Open Check Quantity', style: 'width: 50px', class: 'text-center' },
                         { label: 'Receive Quantity', style: 'width: 50px', class: 'text-center' },
                         { label: 'Open Putaway Quantity', style: 'width: 50px', class: 'text-center' },
+                        { label: 'UoM Name', style: 'width: 50px' },
                     ],
                     row: [
                         { data: 'line_id', tdClass: 'text-center' },
@@ -164,7 +167,8 @@ export default {
                         { data: 'base_quantity', tdClass: 'text-center' },
                         { data: 'open_check_quantity', tdClass: 'text-center' },
                         { data: 'receive_quantity', tdClass: 'text-center' },
-                        { data: 'receive_quantity', tdClass: 'text-center', render: () => 0 }
+                        { data: 'receive_quantity', tdClass: 'text-center', render: () => 0 },
+                        { data: 'product_uom_name' },
                     ]
                 }
             }
@@ -175,14 +179,16 @@ export default {
                         { label: 'Product Code', style: 'width: 250px' },
                         { label: 'Description 1', style: 'width: 200px' },
                         { label: 'Inbound Open Quantity', style: 'width: 50px', class: 'text-center' },
-                        { label: 'Base Quantity', style: 'width: 50px', class: 'text-center' }
+                        { label: 'Base Quantity', style: 'width: 50px', class: 'text-center' },
+                        { label: 'UoM Name', style: 'width: 50px' }
                     ],
                     row: [
                         { data: 'line_id', tdClass: 'text-center' },
                         { data: 'product_code', spanClass: 'tx-bold' },
                         { data: 'product_description', render: value => this.limitString(value, 40) },
                         { data: 'inbound_base_quantity', tdClass: 'text-center' },
-                        { data: 'base_quantity', tdClass: 'text-center' }
+                        { data: 'base_quantity', tdClass: 'text-center' },
+                        { data: 'product_uom_name' }
                     ]
                 }
         }

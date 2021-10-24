@@ -66,6 +66,12 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label for="uom_name" class="col-sm-2 col-form-label">Uom Name</label>
+                        <div class="col-sm-10 d-flex align-items-center">
+                            <span>{{ product.uom_name }}</span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-form-label col-sm-2 pt-0">Status</label>
                         <div class="col-sm-10">
                             <span class="badge badge-success" v-if="product.is_active">Active</span>

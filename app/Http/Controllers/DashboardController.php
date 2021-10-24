@@ -34,17 +34,17 @@ class DashboardController extends Controller
             [
                 'label' => 'Unreceived',
                 'count' => $unreceived,
-                'percentage' => ($unreceived / $total) * 100
+                'percentage' => $total ? ($unreceived / $total) * 100 : 0
             ],
             [
                 'label' => 'Partially Received',
                 'count' => $partial,
-                'percentage' => ($partial / $total) * 100
+                'percentage' => $total ? ($partial / $total) * 100 : 0
             ],
             [
                 'label' => 'Fully Received',
                 'count' => $full,
-                'percentage' => ($full / $total) * 100
+                'percentage' => $total ? ($full / $total) * 100 : 0
             ]
         ];
     }
@@ -61,22 +61,22 @@ class DashboardController extends Controller
             [
                 'label' => 'Draft',
                 'count' => $draft,
-                'percentage' => ($draft / $total) * 100
+                'percentage' => $total ? ($draft / $total) * 100 : 0
             ],
             [
                 'label' => 'Partially Checked',
                 'count' => $partial_check,
-                'percentage' => ($partial_check / $total) * 100
+                'percentage' => $total ? ($partial_check / $total) * 100 : 0
             ],
             [
                 'label' => 'Fully Checked',
                 'count' => $full_check,
-                'percentage' => ($full_check / $total) * 100
+                'percentage' => $total ? ($full_check / $total) * 100 : 0
             ],
             [
                 'label' => 'Received',
                 'count' => $received,
-                'percentage' => ($received / $total) * 100
+                'percentage' => $total ? ($received / $total) * 100 : 0
             ],
         ];
     }

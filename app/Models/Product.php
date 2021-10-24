@@ -15,6 +15,7 @@ class Product extends Model
         'client_id',
         'description_1',
         'description_2',
+        'uom_name',
         'is_active'
     ];
     

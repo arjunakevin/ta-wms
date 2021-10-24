@@ -14,7 +14,7 @@ class GoodReceive extends Document
     const STATUS_PARTIALLY_CHECKED = 2;
     const STATUS_FULLY_CHECKED = 3;
     const STATUS_RECEIVED = 4;
-    const STATUS_PARTIAL_PUTAWAY = 4;
+    const STATUS_PARTIAL_PUTAWAY = 5;
     const STATUS_FULL_PUTAWAY = -1;
 
     protected $fillable = [
@@ -161,13 +161,13 @@ class GoodReceive extends Document
     public function updateMovementStatus()
     {
         $receive_quantity = $this->details->sum('receive_quantity');
-        $inventory_quantity = $this->inventories->sum('base_quantity');
+        $inventory_pick_quantity = $this->inventories->sum('pick_quantity');
 
-        if ($inventory_quantity == 0) {
+        if ($inventory_pick_quantity == $receive_quantity) {
             $this->update([
                 'status' => GoodReceive::STATUS_FULL_PUTAWAY
             ]);
-        } else if ($receive_quantity < $inventory_quantity) {
+        } else if ($inventory_pick_quantity > 1) {
             $this->update([
                 'status' => GoodReceive::STATUS_PARTIAL_PUTAWAY
             ]);

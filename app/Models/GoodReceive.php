@@ -61,7 +61,7 @@ class GoodReceive extends Document
 
     public function isProcessed()
     {
-        return $this->status > GoodReceive::STATUS_DRAFT || $this->status < 0;
+        return $this->status != GoodReceive::STATUS_DRAFT;
     }
 
     public function inbound_delivery()

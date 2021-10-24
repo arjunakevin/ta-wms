@@ -36,13 +36,13 @@ export default {
                     id: 'inboundChart',
                     label: 'Inbound Delivery',
                     data: 'inbound_data',
-                    bg: ['#f77eb9', '#fdbd88','#7ebcff']
+                    bg: ['#f77eb9', '#fdbd88','#00cccc']
                 },
                 {
                     id: 'grChart',
                     label: 'Good Receive',
                     data: 'gr_data',
-                    bg: ['#f77eb9', '#fdbd88', '#fdbd88', '#7ebcff', '#7ebcff', '#7ebcff'],
+                    bg: ['#f77eb9', '#fdbd88', '#fdbd88', '#7ebcff', '#5b47fb', '#00cccc'],
                 }
             ]
         };

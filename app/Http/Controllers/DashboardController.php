@@ -56,6 +56,8 @@ class DashboardController extends Controller
         $partial_check = GoodReceive::whereStatus(GoodReceive::STATUS_PARTIALLY_CHECKED)->count();
         $full_check = GoodReceive::whereStatus(GoodReceive::STATUS_FULLY_CHECKED)->count();
         $received = GoodReceive::whereStatus(GoodReceive::STATUS_RECEIVED)->count();
+        $partial_put = GoodReceive::whereStatus(GoodReceive::STATUS_PARTIAL_PUTAWAY)->count();
+        $full_put = GoodReceive::whereStatus(GoodReceive::STATUS_FULL_PUTAWAY)->count();
 
         return [
             [
@@ -77,6 +79,16 @@ class DashboardController extends Controller
                 'label' => 'Received',
                 'count' => $received,
                 'percentage' => $total ? ($received / $total) * 100 : 0
+            ],
+            [
+                'label' => 'Partial Putaway',
+                'count' => $partial_put,
+                'percentage' => $total ? ($partial_put / $total) * 100 : 0
+            ],
+            [
+                'label' => 'Full Putaway',
+                'count' => $full_put,
+                'percentage' => $total ? ($full_put / $total) * 100 : 0
             ],
         ];
     }

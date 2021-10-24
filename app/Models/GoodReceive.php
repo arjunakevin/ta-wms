@@ -161,15 +161,17 @@ class GoodReceive extends Document
     public function updateMovementStatus()
     {
         $receive_quantity = $this->details->sum('receive_quantity');
+        $inventory_base_quantity = $this->inventories->sum('base_quantity');
         $inventory_pick_quantity = $this->inventories->sum('pick_quantity');
+        $total_quantity = $inventory_base_quantity + $inventory_pick_quantity;
 
-        if ($inventory_pick_quantity == $receive_quantity) {
+        if ($total_quantity == 0) {
             $this->update([
                 'status' => GoodReceive::STATUS_FULL_PUTAWAY
             ]);
-        } else if ($inventory_pick_quantity > 1) {
+        } else if ($total_quantity < $receive_quantity || $inventory_pick_quantity > 1) {
             $this->update([
-                'status' => GoodReceive::STATUS_PARTIAL_PUTAWAY
+                'status' => GoodReceive::STATUS_FULL_PUTAWAY
             ]);
         }
     }

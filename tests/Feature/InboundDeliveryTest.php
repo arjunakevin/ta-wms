@@ -168,7 +168,10 @@ class InboundDeliveryTest extends Base
     /** @test */
     public function can_delete_existing_inbound_delivery_detail()
     {
-        $detail = InboundDeliveryDetail::factory()->create();
+        $detail = InboundDeliveryDetail::factory([
+            'base_quantity' => 100,
+            'open_quantity' => 100
+        ])->create();
 
         $this->assertDatabaseCount('inbound_delivery_details', 1);
 

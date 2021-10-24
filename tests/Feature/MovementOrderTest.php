@@ -79,6 +79,7 @@ class MovementOrderTest extends Base
     /** @test */
     public function can_confirm_movement_order()
     {
+        $this->withoutExceptionHandling();
         $movement_order = MovementOrderDetail::factory()->create();
         $source_inventory = $movement_order->source_inventory;
         $destination_inventory = $movement_order->destination_inventory;

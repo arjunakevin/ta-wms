@@ -10,6 +10,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\GoodReceiveController;
 use App\Http\Controllers\MovementOrderController;
 use App\Http\Controllers\InboundDeliveryController;
+use App\Http\Controllers\OutboundDeliveryController;
 use App\Http\Controllers\MovementOrderDetailController;
 
 /*
@@ -62,4 +63,9 @@ Route::group(['middleware' => 'auth'], function () {
     
     Route::get('movement_order_details/{movement_order}/create', [MovementOrderDetailController::class, 'create'])->name('movement_order_details.create');
     Route::post('movement_order_details/{movement_order}', [MovementOrderDetailController::class, 'store'])->name('movement_order_details.store');
+
+    Route::resource('outbounds', OutboundDeliveryController::class);
+    Route::post('outbound_details', [OutboundDeliveryController::class, 'storeDetail'])->name('outbound_details.store');
+    Route::put('outbound_details/{detail}', [OutboundDeliveryController::class, 'updateDetail'])->name('outbound_details.update');
+    Route::delete('outbound_details/{detail}', [OutboundDeliveryController::class, 'destroyDetail'])->name('outbound_details.destroy');
 });

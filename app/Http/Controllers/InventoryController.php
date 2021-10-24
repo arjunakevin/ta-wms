@@ -32,6 +32,9 @@ class InventoryController extends Controller
                 'location_id',
                 'documentable_id'
             )
+            ->where('base_quantity', '>', 0)
+            ->orWhere('pick_quantity', '>', 0)
+            ->orWhere('put_quantity', '>', 0)
             ->paginate();
 
         return inertia()->render('Inventory/Index', compact('data'));

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\GoodReceive;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use mikehaertl\wkhtmlto\Pdf;
 use App\Models\InboundDelivery;
 use Illuminate\Support\Facades\DB;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Requests\GoodReceiveFormRequest;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\GoodReceiveCheckFormRequest;
@@ -200,6 +203,12 @@ class GoodReceiveController extends Controller
         return redirect()->route('grs.check', $good_receive);
     }
 
+    /**
+     * Add stock to inventory
+     *
+     * @param GoodReceive $good_receive
+     * @return \Illuminate\Http\Response
+     */
     public function receive(GoodReceive $good_receive)
     {
         if ($good_receive->status == GoodReceive::STATUS_DRAFT) {
@@ -219,5 +228,58 @@ class GoodReceiveController extends Controller
         session()->flash('message', 'Receive success.');
 
         return redirect()->route('grs.show', $good_receive);
+    }
+
+    /**
+     * Print good receive report
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function print(GoodReceive $good_receive)
+    {
+        $good_receive->load('details.inbound_delivery_detail.product');
+
+        $data = [
+            'id' => $good_receive->id,
+            'name' => 'Good Receive Report',
+            'qr' => (QrCode::size(85)->margin(0)->generate($good_receive->id)->toHtml()),
+            'header' => [
+                1 => [
+                    'title' => 'Reference',
+                    'value' => $good_receive->reference
+                ],
+                3 => [
+                    'title' => 'Client Code',
+                    'value' => $good_receive->inbound_delivery->client->code
+                ],
+                5 => [
+                    'title' => 'Receive Date',
+                    'value' => $good_receive->receive_date
+                ],
+                7 => [
+                    'title' => 'Notes',
+                    'value' => $good_receive->notes
+                ]
+            ],
+            'data' => $good_receive->toArray(),
+            'details' => $good_receive->details->map(function ($detail) {
+                return [
+                    'product_code' => $detail->inbound_delivery_detail->product->code,
+                    'description' => $detail->inbound_delivery_detail->product->description_1,
+                    'base_quantity' => $detail->receive_quantity,
+                    'uom_name' => $detail->inbound_delivery_detail->product->uom_name,
+                ];
+            })
+        ];
+
+        $data['qr'] = '<svg' . (Str::between($data['qr'], '<svg', 'svg>')) . 'svg>';
+
+        $pdf = new Pdf([
+            'binary' => 'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf'
+        ]);
+
+        $pdf->addPage(view('prints.document', compact('data'))->render());
+
+        return $pdf->send();
     }
 }

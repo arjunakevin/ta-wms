@@ -12,6 +12,8 @@
         "laravel/framework": "^8.54",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "mikehaertl/phpwkhtmltopdf": "^2.5",
+        "simplesoftwareio/simple-qrcode": "~4",
         "tightenco/ziggy": "^1.4"
     },
     "require-dev": {

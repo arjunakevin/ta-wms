@@ -17,10 +17,38 @@ class InboundDeliveryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $status = $request->status ?? 'open';
+
         $data = InboundDelivery::with('client')
             ->withCount('details')
+            ->when($request->id, function ($query) use ($request) {
+                $query->whereId($request->id);
+            })
+            ->when($request->reference, function ($query) use ($request) {
+                $query->where('reference', 'like', '%' . $request->reference . '%');
+            })
+            ->when($request->client_code, function ($query) use ($request) {
+                $query->whereHas('client', function ($query) use ($request) {
+                    $query->whereCode($request->client_code);
+                });
+            })
+            ->when($request->arrival_date_from && $request->arrival_date_to, function ($query) use ($request) {
+                $query->whereBetween('arrival_date', [$request->arrival_date_from, $request->arrival_date_to]);
+            })
+            ->when($request->po_date_from && $request->po_date_to, function ($query) use ($request) {
+                $query->whereBetween('po_date', [$request->po_date_from, $request->po_date_to]);
+            })
+            ->when($status, function ($query) use ($status) {
+                if ($status != 'open') {
+                    $op = '=';
+                } else {
+                    $op = '!=';
+                }
+
+                $query->where('status', $op, InboundDelivery::STATUS_FULLY_RECEIVED);
+            })
             ->paginate();
 
         return inertia()->render('InboundDelivery/Index', compact('data'));

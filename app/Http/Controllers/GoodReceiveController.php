@@ -122,7 +122,7 @@ class GoodReceiveController extends Controller
      */
     public function destroy(GoodReceive $good_receive)
     {
-        if ($good_receive->processed()) {
+        if ($good_receive->isProcessed()) {
             throw ValidationException::withMessages([
                 'message' => 'Good receive is already processed.'
             ]);

@@ -101,7 +101,7 @@ class InboundDeliveryController extends Controller
      */
     public function destroy(InboundDelivery $inbound)
     {
-        if ($inbound->processed()) {
+        if ($inbound->isProcessed()) {
             throw ValidationException::withMessages([
                 'message' => 'Inbound is already received.'
             ]);

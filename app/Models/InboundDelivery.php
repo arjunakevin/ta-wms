@@ -53,7 +53,7 @@ class InboundDelivery extends Model
         }
     }
 
-    public function processed()
+    public function isProcessed()
     {
         return $this->status != InboundDelivery::STATUS_UNRECEIVED;
     }

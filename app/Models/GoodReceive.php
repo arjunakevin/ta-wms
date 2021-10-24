@@ -59,9 +59,9 @@ class GoodReceive extends Model
         }
     }
 
-    public function processed()
+    public function isProcessed()
     {
-        return $this->status > GoodReceive::STATUS_DRAFT;
+        return $this->status > GoodReceive::STATUS_DRAFT || $this->status < 0;
     }
 
     public function inbound_delivery()

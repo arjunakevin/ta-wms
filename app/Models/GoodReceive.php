@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class GoodReceive extends Model
+class GoodReceive extends Document
 {
     use HasFactory;
 
@@ -169,7 +169,7 @@ class GoodReceive extends Model
             ]);
         } else if ($receive_quantity < $inventory_quantity) {
             $this->update([
-                'status' => GoodReceive::STATUS_PARTIAL_CHECKED
+                'status' => GoodReceive::STATUS_PARTIAL_PUTAWAY
             ]);
         }
     }

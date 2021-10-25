@@ -5,7 +5,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                         <li class="breadcrumb-item"><a href="#">Inbound</a></li>
-                        <li class="breadcrumb-item"><Link :href="$route('grs.index')">Good Receiving</Link></li>
+                        <li class="breadcrumb-item"><Link :href="$route('good_receives.index')">Good Receiving</Link></li>
                         <li class="breadcrumb-item active" aria-current="page">{{ good_receive.reference }}</li>
                     </ol>
                 </nav>
@@ -14,7 +14,7 @@
         </div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <Link :href="$route('grs.show', good_receive)" class="nav-link">Good Receiving</Link>
+                <Link :href="$route('good_receives.show', good_receive)" class="nav-link">Good Receiving</Link>
             </li>
             <li class="nav-item">
                 <a class="nav-link active">Item Check</a>
@@ -150,7 +150,7 @@ export default {
             }, 1);
         },
         submit() {
-            this.form.post(this.$route('grs.check.submit', this.good_receive));
+            this.form.post(this.$route('good_receives.check.submit', this.good_receive));
         }
     }
 }

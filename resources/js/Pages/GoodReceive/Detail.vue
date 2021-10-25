@@ -5,7 +5,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                         <li class="breadcrumb-item"><a href="#">Inbound</a></li>
-                        <li class="breadcrumb-item"><Link :href="$route('grs.index')">Good Receiving</Link></li>
+                        <li class="breadcrumb-item"><Link :href="$route('good_receives.index')">Good Receiving</Link></li>
                         <li class="breadcrumb-item active" aria-current="page">{{ good_receive.reference }}</li>
                     </ol>
                 </nav>
@@ -17,7 +17,7 @@
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     <span class="sr-only">Loading...</span>
                 </button>
-                <Link :href="$route('grs.edit', good_receive)" as="button" type="button" class="btn btn-sm pd-x-15 btn-primary btn-uppercase"><i data-feather="edit" class="wd-10 mg-r-5"></i> Edit</Link>
+                <Link :href="$route('good_receives.edit', good_receive)" as="button" type="button" class="btn btn-sm pd-x-15 btn-primary btn-uppercase"><i data-feather="edit" class="wd-10 mg-r-5"></i> Edit</Link>
                 <a v-show="!deleting" href="#delete-modal" data-toggle="modal" class="btn btn-sm pd-x-15 btn-danger btn-uppercase"><i data-feather="trash" class="wd-10 mg-r-5"></i> Delete</a>
                 <button v-show="deleting" class="btn btn-sm pd-x-15 btn-danger btn-uppercase" type="button" disabled>
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -30,7 +30,7 @@
                 <a class="nav-link active">Good Receiving</a>
             </li>
             <li class="nav-item">
-                <Link :href="$route('grs.check', good_receive)" class="nav-link">Item Check</Link>
+                <Link :href="$route('good_receives.check', good_receive)" class="nav-link">Item Check</Link>
             </li>
         </ul>
         <div class="tab-content bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
@@ -186,7 +186,7 @@ export default {
     },
     methods: {
         submitDeletion() {
-            this.$inertia.delete(this.$route('grs.destroy', this.good_receive), {
+            this.$inertia.delete(this.$route('good_receives.destroy', this.good_receive), {
                 onBefore: () => {
                     this.deleting = true;
 
@@ -196,7 +196,7 @@ export default {
             });
         },
         receive() {
-            this.$inertia.post(this.$route('grs.receive', this.good_receive), null, {
+            this.$inertia.post(this.$route('good_receives.receive', this.good_receive), null, {
                 preserveState: false,
                 resetOnSuccess: false,
                 onBefore: () => {

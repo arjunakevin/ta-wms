@@ -67,7 +67,7 @@ class GoodReceiveController extends Controller
             );
         });
 
-        return redirect()->route('grs.show', $gr);
+        return redirect()->route('good_receives.show', $gr);
     }
 
     /**
@@ -114,7 +114,7 @@ class GoodReceiveController extends Controller
     {
         $good_receive->update($request->validated());
 
-        return redirect()->route('grs.show', $good_receive);
+        return redirect()->route('good_receives.show', $good_receive);
     }
 
     /**
@@ -141,7 +141,7 @@ class GoodReceiveController extends Controller
             $good_receive->inbound_delivery->updateStatus();
         });
 
-        return redirect()->route('grs.index');
+        return redirect()->route('good_receives.index');
     }
 
     /**
@@ -164,7 +164,7 @@ class GoodReceiveController extends Controller
                 throw new GoodReceiveInboundDeliveryException('Inbound delivery is fully received.');
             }
 
-            return redirect()->route('grs.create', $inbound);
+            return redirect()->route('good_receives.create', $inbound);
         } catch (GoodReceiveInboundDeliveryException $e) {
             throw ValidationException::withMessages([
                 'inbound' => $e->getMessage()
@@ -200,7 +200,7 @@ class GoodReceiveController extends Controller
 
         $good_receive->updateCheckStatus();
 
-        return redirect()->route('grs.check', $good_receive);
+        return redirect()->route('good_receives.check', $good_receive);
     }
 
     /**
@@ -227,7 +227,7 @@ class GoodReceiveController extends Controller
 
         session()->flash('message', 'Receive success.');
 
-        return redirect()->route('grs.show', $good_receive);
+        return redirect()->route('good_receives.show', $good_receive);
     }
 
     /**

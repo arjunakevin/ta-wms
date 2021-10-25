@@ -2,7 +2,7 @@
     <div>
         <aside class="aside aside-fixed">
         <div class="aside-header">
-            <a href="../../index.html" class="aside-logo">dash<span>forge</span></a>
+            <a href="../../index.html" class="aside-logo">Goodang<span>WMS</span></a>
             <a href="" class="aside-menu-link">
             <i data-feather="menu"></i>
             <i data-feather="x"></i>
@@ -52,17 +52,7 @@
 
         <div class="content ht-100v pd-0">
             <div class="content-header">
-                <div class="content-search">
-                <i data-feather="search"></i>
-                <input type="search" class="form-control" placeholder="Search...">
-                </div>
-                <nav class="nav">
-                <a href="" class="nav-link"><i data-feather="help-circle"></i></a>
-                <a href="" class="nav-link"><i data-feather="grid"></i></a>
-                <a href="" class="nav-link"><i data-feather="align-left"></i></a>
-                </nav>
             </div><!-- content-header -->
-
             <div class="content-body">
                 <div class="pd-x-0">
                     <slot />
@@ -101,7 +91,7 @@ export default {
                     },
                     {
                         label: 'Good Receiving',
-                        link: route('grs.index'),
+                        link: route('good_receives.index'),
                         icon: 'file-plus'
                     },
                     {
@@ -117,7 +107,7 @@ export default {
                     },
                     {
                         label: 'Outbound Delivery',
-                        link: '#',
+                        link: route('outbounds.index'),
                         icon: 'arrow-up'
                     },
                     {
@@ -154,7 +144,7 @@ export default {
                     },
                     {
                         label: 'Good Receiving',
-                        link: route('grs.index'),
+                        link: route('good_receives.index'),
                         icon: 'file-plus'
                     },
                     {
@@ -180,7 +170,7 @@ export default {
                     },
                     {
                         label: 'Outbound Delivery',
-                        link: '#',
+                        link: route('outbounds.index'),
                         icon: 'arrow-up'
                     },
                     {

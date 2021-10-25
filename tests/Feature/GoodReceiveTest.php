@@ -19,7 +19,7 @@ class GoodReceiveTest extends Base
     {
         GoodReceive::factory(5)->create();
 
-        $this->get(route('grs.index'))
+        $this->get(route('good_receives.index'))
             ->assertInertia(function (Assert $page) {
                 return $page->component('GoodReceive/Index')
                     ->has('data.data', 5);
@@ -31,7 +31,7 @@ class GoodReceiveTest extends Base
     {
         $inbound = InboundDelivery::factory()->create();
         
-        $this->get(route('grs.create', $inbound))
+        $this->get(route('good_receives.create', $inbound))
             ->assertInertia(function (Assert $page) {
                 return $page->component('GoodReceive/Form');
             });
@@ -42,11 +42,11 @@ class GoodReceiveTest extends Base
     {
         $inbound = InboundDelivery::factory()->create();
 
-        $this->post(route('grs.inbound.search'), [
+        $this->post(route('good_receives.inbound.search'), [
                 'reference' => $inbound->reference,
                 'client_code' => $inbound->client->code
             ])
-            ->assertRedirect(route('grs.create', $inbound));
+            ->assertRedirect(route('good_receives.create', $inbound));
     }
 
     /** @test */
@@ -69,7 +69,7 @@ class GoodReceiveTest extends Base
         $this->assertEquals(InboundDelivery::STATUS_UNRECEIVED, $inbound->status);
         $this->assertEquals(200, $inbound->details->sum('open_quantity'));
 
-        $this->post(route('grs.store'), $data);
+        $this->post(route('good_receives.store'), $data);
 
         $inbound->refresh();
 
@@ -90,7 +90,7 @@ class GoodReceiveTest extends Base
             'status' => ''
         ])->raw();
 
-        $this->post(route('grs.store'), $data)
+        $this->post(route('good_receives.store'), $data)
             ->assertSessionHasErrors();
     }
 
@@ -99,7 +99,7 @@ class GoodReceiveTest extends Base
     {
         $good_receive = GoodReceive::factory()->create();
 
-        $this->get(route('grs.show', $good_receive))
+        $this->get(route('good_receives.show', $good_receive))
             ->assertInertia(function (Assert $page) {
                 return $page->component('GoodReceive/Detail')
                     ->has('good_receive');
@@ -123,7 +123,7 @@ class GoodReceiveTest extends Base
 
         $new_good_receive = GoodReceive::factory($new_data)->raw();
 
-        $this->put(route('grs.update', $good_receive), $new_good_receive);
+        $this->put(route('good_receives.update', $good_receive), $new_good_receive);
 
         $this->assertDatabaseHas('good_receives', $new_data);
     }
@@ -151,7 +151,7 @@ class GoodReceiveTest extends Base
         $this->assertDatabaseCount('good_receives', 1);
         $this->assertEquals(0, $inbound->details->sum('open_quantity'));
 
-        $this->delete(route('grs.destroy', $good_receive));
+        $this->delete(route('good_receives.destroy', $good_receive));
 
         $inbound->refresh();
 

@@ -41,16 +41,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('inbound_details/{detail}', [InboundDeliveryController::class, 'updateDetail'])->name('inbound_details.update');
     Route::delete('inbound_details/{detail}', [InboundDeliveryController::class, 'destroyDetail'])->name('inbound_details.destroy');
     
-    Route::resource('grs', GoodReceiveController::class)
-        ->parameter('grs', 'good_receive')
+    Route::resource('good_receives', GoodReceiveController::class)
+        ->parameter('good_receives', 'good_receive')
         ->except('create');
-    Route::get('grs/{inbound}/create', [GoodReceiveController::class, 'create'])->name('grs.create');
-    Route::post('grs/inbound/search', [GoodReceiveController::class, 'searchInbound'])->name('grs.inbound.search');
+    Route::get('good_receives/{inbound}/create', [GoodReceiveController::class, 'create'])->name('good_receives.create');
+    Route::post('good_receives/inbound/search', [GoodReceiveController::class, 'searchInbound'])->name('good_receives.inbound.search');
     
-    Route::get('grs/{good_receive}/check', [GoodReceiveController::class, 'check'])->name('grs.check');
-    Route::post('grs/{good_receive}/check', [GoodReceiveController::class, 'submitCheck'])->name('grs.check.submit');
-    Route::post('grs/{good_receive}/receive', [GoodReceiveController::class, 'receive'])->name('grs.receive');
-    Route::get('grs/{good_receive}/print', [GoodReceiveController::class, 'print'])->name('grs.print');
+    Route::get('good_receives/{good_receive}/check', [GoodReceiveController::class, 'check'])->name('good_receives.check');
+    Route::post('good_receives/{good_receive}/check', [GoodReceiveController::class, 'submitCheck'])->name('good_receives.check.submit');
+    Route::post('good_receives/{good_receive}/receive', [GoodReceiveController::class, 'receive'])->name('good_receives.receive');
+    Route::get('good_receives/{good_receive}/print', [GoodReceiveController::class, 'print'])->name('good_receives.print');
     
     Route::get('inventories', [InventoryController::class, 'index'])->name('inventories.index');
     

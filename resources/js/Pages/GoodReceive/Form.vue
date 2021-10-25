@@ -6,9 +6,9 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                             <li class="breadcrumb-item"><a href="#">Inbound</a></li>
-                            <li class="breadcrumb-item"><Link :href="$route('grs.index')">Good Receiving</Link></li>
+                            <li class="breadcrumb-item"><Link :href="$route('good_receives.index')">Good Receiving</Link></li>
                             <template v-if="good_receive">
-                                <li class="breadcrumb-item"><Link :href="$route('grs.show', good_receive)">{{ good_receive.reference }}</Link></li>
+                                <li class="breadcrumb-item"><Link :href="$route('good_receives.show', good_receive)">{{ good_receive.reference }}</Link></li>
                                 <li class="breadcrumb-item active" aria-current="page">Edit</li>
                             </template>
                             <li v-else class="breadcrumb-item active" aria-current="page">Create</li>
@@ -200,9 +200,9 @@ export default {
             };
 
             if (this.good_receive) {
-                this.form.put(this.$route('grs.update', this.good_receive), options);
+                this.form.put(this.$route('good_receives.update', this.good_receive), options);
             } else {
-                this.form.post(this.$route('grs.store'), options);
+                this.form.post(this.$route('good_receives.store'), options);
             }
         },
     },

@@ -14,7 +14,7 @@
                 <a href="#search-modal" data-toggle="modal" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5"><i data-feather="plus" class="wd-10 mg-r-5"></i> Create Good Receiving</a>
             </div>
         </div>
-        <Table :data="data" :columnDefs="columnDefs" view-route="grs.show"/>
+        <Table :data="data" :columnDefs="columnDefs" view-route="good_receives.show"/>
         <Pagination :data="data"/>
 
         <div class="modal fade" id="search-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
@@ -116,7 +116,7 @@ export default {
     },
     methods: {
         search() {
-            this.form.post(this.$route('grs.inbound.search'), {
+            this.form.post(this.$route('good_receives.inbound.search'), {
                 onBefore: () => $('#search-modal').modal('hide'),
                 onError: () => $('#search-modal').modal('show')
             });

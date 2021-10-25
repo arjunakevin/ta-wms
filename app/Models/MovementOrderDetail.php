@@ -16,6 +16,7 @@ class MovementOrderDetail extends Model
         'destination_inventory_id',
         'destination_location_id',
         'base_quantity',
+        'is_pick',
         'status'
     ];
     

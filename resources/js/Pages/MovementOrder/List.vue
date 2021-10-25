@@ -45,10 +45,10 @@
                         <div class="form-group row">
                             <label for="type" class="col-sm-3 col-form-label">Type <span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <select class="form-control select2" v-model="form.type">
+                                <select2 v-model="form.type">
                                     <option value="1">Putaway</option>
                                     <option value="2">Picking</option>
-                                </select>
+                                </select2>
                             </div>
                         </div>
                     </div>
@@ -120,11 +120,6 @@ export default {
                 onError: () => $('#search-modal').modal('show')
             });
         }
-    },
-    mounted() {
-        $('.select2').select2({
-            minimumResultsForSearch: Infinity
-        });
     }
 }
 </script>

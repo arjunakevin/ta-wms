@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\GoodReceive;
 use Illuminate\Http\Request;
+use App\Models\DeliveryOrder;
 use App\Models\MovementOrder;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovementOrderDetail;
@@ -59,10 +60,13 @@ class MovementOrderController extends Controller
 
         if ($type == MovementOrder::TYPE_PUTAWAY) {
             $document = GoodReceive::findOrFail($document_id);
-            $inventories = $document->inventories()->with('product')->get();
+            $details = $document->inventories()->with('product')->get();
+        } else {
+            $document = DeliveryOrder::findOrFail($document_id);
+            $details = $document->details()->with('outbound_delivery_detail.product')->get();
         }
 
-        return inertia()->render('MovementOrder/Form', compact('type', 'document', 'inventories'));
+        return inertia()->render('MovementOrder/Form', compact('type', 'document', 'details'));
     }
 
     /**
@@ -78,6 +82,8 @@ class MovementOrderController extends Controller
     
             if ($request->type == MovementOrder::TYPE_PUTAWAY) {
                 $document = GoodReceive::findOrFail($request->document_id);
+            } else {
+                $document = DeliveryOrder::findOrFail($request->document_id);
             }
     
             return $document->movement_orders()->create($request->validated());
@@ -206,6 +212,16 @@ class MovementOrderController extends Controller
                 }
 
                 $document = $gr;
+            } else {
+                $do = DeliveryOrder::find($request->id);
+
+                if (!$do) {
+                    throw new MovementDocumentException('Delivery order data not found.');
+                } else if ($do->isFullyPicked()) {
+                    throw new MovementDocumentException('Delivery order has no outstanding pick.');
+                }
+
+                $document = $do;
             }
         } catch (MovementDocumentException $e) {
             throw ValidationException::withMessages([

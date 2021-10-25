@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Product;
 use App\Models\Location;
+use App\Models\Inventory;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MovementOrderDetailFormRequest extends FormRequest
@@ -57,22 +58,57 @@ class MovementOrderDetailFormRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $inventory = $this->movement_order->documentable->inventories()
-                ->whereHas('product', function ($q) {
-                    $q->whereId($this->product_id);
-                })
-                ->first();
+            if ($this->movement_order->isPutaway()) {
+                $inventories = $this->movement_order->documentable->inventories()
+                    ->whereHas('product', function ($q) {
+                        $q->whereId($this->product_id);
+                    })
+                    ->get();
 
-            if (!$inventory) {
-                $validator->errors()->add('product_id', 'The selected product is invalid.');
-            } else if ($inventory->available_pick_quantity <= 0) {
-                $validator->errors()->add('product_id', 'The selected product has no putaway outstanding.');
-            } else if ($inventory->available_pick_quantity < $this->base_quantity) {
-                $validator->errors()->add('base_quantity', "Base quantity can't be greater than remaining quantity (Remaining: {$inventory->available_pick_quantity}).");
+                $available = $inventories->sum('available_pick_quantity');
+    
+                if (!$inventories) {
+                    $validator->errors()->add('product_id', 'The selected product is invalid.');
+                } else if ($available <= 0) {
+                    $validator->errors()->add('product_id', 'The selected product has no putaway outstanding.');
+                } else if ($available < $this->base_quantity) {
+                    $validator->errors()->add('base_quantity', "Base quantity can't be greater than remaining quantity (Remaining: {$available}).");
+                } else {
+                    $this->merge([
+                        'inventories' => $inventories
+                    ]);
+                }
             } else {
-                $this->merge([
-                    'inventory' => $inventory
-                ]);
+                $detail = $this->movement_order->documentable->details()
+                    ->whereHas('outbound_delivery_detail', function ($q) {
+                        $q->whereProductId($this->product_id);
+                    })
+                    ->first();
+
+                $open_pick_quantity = $detail->open_pick_quantity;
+
+                if (!$detail) {
+                    $validator->errors()->add('product_id', 'The selected product is invalid.');
+                } else if ($open_pick_quantity <= 0) {
+                    $validator->errors()->add('product_id', 'The selected product has no pick outstanding.');
+                } else if ($this->base_quantity > $open_pick_quantity) {
+                    $validator->errors()->add('base_quantity', "Base quantity can't be greater than remaining quantity (Remaining: {$open_pick_quantity}).");
+                }
+
+                $inventories = Inventory::whereProductId($this->product_id)
+                    ->whereLocationId($this->location_id)
+                    ->get();
+
+                $available = $inventories->sum('available_pick_quantity');
+
+                if ($available < $this->base_quantity) {
+                    $validator->errors()->add('location_id', "Product not available in this location (Available : ${available})");
+                } else {
+                    $this->merge([
+                        'inventories' => $inventories,
+                        'detail' => $detail
+                    ]);
+                }
             }
         });
     }

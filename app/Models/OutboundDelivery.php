@@ -11,6 +11,8 @@ class OutboundDelivery extends Model
     use HasFactory;
 
     const STATUS_UNCOMMITTED = 1;
+    const STATUS_PARTIALLY_COMMITTED = 2;
+    const STATUS_FULLY_COMMITTED = -1;
 
     protected $fillable = [
         'reference',
@@ -37,6 +39,11 @@ class OutboundDelivery extends Model
     public function details()
     {
         return $this->hasMany(OutboundDeliveryDetail::class);
+    }
+
+    public function open_details()
+    {
+        return $this->details()->open();
     }
 
     public function getRequestDeliveryDateAttribute($data)

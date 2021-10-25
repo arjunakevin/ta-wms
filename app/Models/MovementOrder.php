@@ -53,4 +53,9 @@ class MovementOrder extends Model
 
         return $date->format('Y-m-d') . 'T' . $date->format('H:i');
     }
+
+    public function isPutaway()
+    {
+        $this->documentable_type == get_class(new GoodReceive());
+    }
 }

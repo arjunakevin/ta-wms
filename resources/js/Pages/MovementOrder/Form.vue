@@ -65,8 +65,7 @@
                     </div>
                 </div>
                 <hr>
-                <Table :data="inventories" :columnDefs="columnDefs" />
-                <Pagination :data="inventories"/>
+                <Table :data="details" :columnDefs="columnDefs" />
             </div>
         </div>
     </form>
@@ -78,11 +77,44 @@ import Pagination from '../../Components/Pagination';
 import Table from '../../Components/Table';
 
 export default {
-    props: ['movement_order', 'errors', 'type', 'document', 'inventories'],
+    props: ['movement_order', 'errors', 'type', 'document', 'details'],
     components: {
         Link,
         Table,
         Pagination
+    },
+    computed: {
+        columnDefs() {
+            const data = {
+                header: [
+                    { label: 'Product Code', style: 'width: 250px' },
+                    { label: 'Description 1', style: 'width: 200px' },
+                    { label: 'Base Quantity', style: 'width: 50px', class: 'text-center' },
+                    { label: 'Available Pick Quantity', style: 'width: 50px', class: 'text-center' },
+                    { label: 'UoM Name', style: 'width: 50px' }
+                ]
+            };
+
+            if (this.type == 1) {
+                data.row = [
+                    { data: 'product.code', spanClass: 'tx-bold' },
+                    { data: 'product.description_1', render: value => this.limitString(value, 40) },
+                    { data: 'base_quantity', tdClass: 'text-center' },
+                    { data: 'available_pick_quantity', tdClass: 'text-center' },
+                    { data: 'product.uom_name' }
+                ]
+            } else {
+                data.row = [
+                    { data: 'outbound_delivery_detail.product.code', spanClass: 'tx-bold' },
+                    { data: 'outbound_delivery_detail.product.description_1', render: value => this.limitString(value, 40) },
+                    { data: 'base_quantity', tdClass: 'text-center' },
+                    { data: 'open_pick_quantity', tdClass: 'text-center' },
+                    { data: 'outbound_delivery_detail.product.uom_name' }
+                ]
+            }
+
+            return data;
+        }
     },
     data() {
         return {
@@ -91,23 +123,7 @@ export default {
                 date: '',
                 type: this.type,
                 document_id: this.document.id
-            }),
-            columnDefs: {
-                header: [
-                    { label: 'Product Code', style: 'width: 250px' },
-                    { label: 'Description 1', style: 'width: 200px' },
-                    { label: 'Base Quantity', style: 'width: 50px', class: 'text-center' },
-                    { label: 'Available Pick Quantity', style: 'width: 50px', class: 'text-center' },
-                    { label: 'UoM Name', style: 'width: 50px' }
-                ],
-                row: [
-                    { data: 'product.code', spanClass: 'tx-bold' },
-                    { data: 'product.description_1', render: value => this.limitString(value, 40) },
-                    { data: 'base_quantity', tdClass: 'text-center' },
-                    { data: 'available_pick_quantity', tdClass: 'text-center' },
-                    { data: 'product.uom_name' }
-                ]
-            },
+            })
         }
     },
     methods: {

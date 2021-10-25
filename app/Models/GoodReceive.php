@@ -171,7 +171,7 @@ class GoodReceive extends Document
             ]);
         } else if ($total_quantity < $receive_quantity || $inventory_pick_quantity > 1) {
             $this->update([
-                'status' => GoodReceive::STATUS_FULL_PUTAWAY
+                'status' => GoodReceive::STATUS_PARTIAL_PUTAWAY
             ]);
         }
     }

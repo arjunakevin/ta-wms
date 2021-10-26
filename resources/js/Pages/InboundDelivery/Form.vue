@@ -150,7 +150,7 @@
                                                 <input type="text" class="form-control" v-model="detail.selected.description_1" placeholder="Description 1" disabled>
                                             </td>
                                             <td scope="row" style="vertical-align: middle" class="text-center">
-                                                <input type="number" class="form-control" v-model="detail.base_quantity" placeholder="Base Quantity" @input="setOpenQuantity(detail)" :disabled="!detail.selected.id || !detail.editing" @keyup.enter="saveDetail(detail, i)">
+                                                <input type="number" class="form-control" v-model="detail.base_quantity" placeholder="Base Quantity" @input="setOpenQuantity(detail)" :disabled="!detail.editing" @keyup.enter="saveDetail(detail, i)">
                                             </td>
                                             <td scope="row" style="vertical-align: middle" class="text-center">
                                                 <input type="number" class="form-control" v-model="detail.open_quantity" placeholder="Open Quantity" disabled>

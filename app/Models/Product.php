@@ -28,4 +28,12 @@ class Product extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function scopeFindByCodeOrBarcode($query, $code)
+    {
+        $query->whereCode($code)
+            ->when(!empty($code), function ($query) use ($code) {
+                $query->orWhere('barcode', $code);
+            });
+    }
 }

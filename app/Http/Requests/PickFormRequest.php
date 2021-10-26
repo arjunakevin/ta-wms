@@ -39,7 +39,7 @@ class PickFormRequest extends FormRequest
      */
     public function prepareForValidation()
     {
-        $product = Product::whereCode($this->product_code)->first();
+        $product = Product::findByCodeOrBarcode($this->product_code)->first();
         $location = Location::whereCode($this->location_code)->first();
 
         $this->merge([

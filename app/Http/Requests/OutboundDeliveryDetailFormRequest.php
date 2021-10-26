@@ -55,7 +55,7 @@ class OutboundDeliveryDetailFormRequest extends FormRequest
     public function prepareForValidation()
     {
         $outbound = OutboundDelivery::whereId($this->outbound_delivery_id)->first();
-        $product = Product::whereCode($this->code)->first();
+        $product = Product::findByCodeOrBarcode($this->code)->first();
 
         $this->merge([
             'client_id' => $outbound ? $outbound->client_id : -1,

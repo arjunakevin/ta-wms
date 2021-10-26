@@ -22,6 +22,10 @@ use App\Http\Controllers\MovementOrderController;
 |
 */
 
+Route::get('/clients', [ClientController::class, 'list'])->name('clients.list');
+Route::get('/products', [ProductController::class, 'list'])->name('products.list');
+Route::get('/locations', [LocationController::class, 'list'])->name('locations.list');
+
 Route::post('/login', [AuthController::class, 'appLogin']);
 
 Route::middleware('auth:sanctum')->get('/session', function (Request $request) {
@@ -29,9 +33,6 @@ Route::middleware('auth:sanctum')->get('/session', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/clients', [ClientController::class, 'list'])->name('clients.list');
-    Route::get('/products', [ProductController::class, 'list'])->name('products.list');
-    Route::get('/locations', [LocationController::class, 'list'])->name('locations.list');
     
     Route::get('/dashboard', [DashboardController::class, 'appDashboardData'])->name('app.dashboard.data');
     

@@ -37,7 +37,7 @@ class DeliveryOrderCheckFormRequest extends FormRequest
      */
     public function prepareForValidation()
     {
-        $product = Product::whereCode($this->product_code)->first();
+        $product = Product::findByCodeOrBarcode($this->product_code)->first();
 
         $this->merge([
             'product_id' => $product ? $product->id : -1

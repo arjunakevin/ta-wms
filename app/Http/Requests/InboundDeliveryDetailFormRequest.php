@@ -55,7 +55,7 @@ class InboundDeliveryDetailFormRequest extends FormRequest
     public function prepareForValidation()
     {
         $inbound = InboundDelivery::whereId($this->inbound_delivery_id)->first();
-        $product = Product::whereCode($this->code)->first();
+        $product = Product::findByCodeOrBarcode($this->code)->first();
 
         $this->merge([
             'client_id' => $inbound ? $inbound->client_id : -1,

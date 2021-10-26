@@ -56,6 +56,6 @@ class MovementOrder extends Model
 
     public function isPutaway()
     {
-        $this->documentable_type == get_class(new GoodReceive());
+        return $this->documentable_type == get_class(new GoodReceive());
     }
 }

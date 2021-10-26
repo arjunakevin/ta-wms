@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Location;
 use App\Models\GoodReceive;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use mikehaertl\wkhtmlto\Pdf;
+use App\Models\MovementOrder;
 use App\Models\InboundDelivery;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\AppPutawayResponse;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Requests\GoodReceiveFormRequest;
 use App\Http\Resources\AppGoodReceiveResponse;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\GoodReceiveCheckFormRequest;
+use App\Http\Requests\MovementOrderDetailFormRequest;
 use App\Exceptions\GoodReceiveInboundDeliveryException;
 
 class GoodReceiveController extends Controller
@@ -203,7 +207,7 @@ class GoodReceiveController extends Controller
         $good_receive->updateCheckStatus();
 
         if ($request->wantsJson()) {
-            return $this->getAppGoodReceiveResponse($good_receive);
+            return $this->appGoodReceiveCheckData($good_receive);
         }
 
         return redirect()->route('good_receives.check', $good_receive);
@@ -289,6 +293,12 @@ class GoodReceiveController extends Controller
         return $pdf->send();
     }
 
+    /**
+     * Check item check status
+     *
+     * @param GoodReceive $good_receive
+     * @return \Illuminate\Http\Response
+     */
     public function appGoodReceiveCheckSearch(GoodReceive $good_receive)
     {
         $valid_statuses = [
@@ -308,7 +318,7 @@ class GoodReceiveController extends Controller
     }
 
     /**
-     * Search good receive check
+     * Get good receive check data
      *
      * @param GoodReceive $good_receive
      * @return \Illuminate\Http\Response
@@ -321,26 +331,86 @@ class GoodReceiveController extends Controller
     }
 
     /**
-     * Submit good receive check
+     * Check putaway status
      *
      * @param GoodReceive $good_receive
      * @return \Illuminate\Http\Response
      */
-    public function appGoodReceiveSubmitCheck(GoodReceiveCheckFormRequest $request, GoodReceive $good_receive)
-    {   
-        if ($good_receive->details->sum('open_check_quantity') <= 0) {
+    public function appGoodReceivePutawaySearch(GoodReceive $good_receive)
+    {
+        $valid_statuses = [
+            GoodReceive::STATUS_RECEIVED,
+            GoodReceive::STATUS_PARTIAL_PUTAWAY
+        ];
+
+        if (!in_array($good_receive->status, $valid_statuses)) {
             return response()->json([
-                'message' => 'Good receive ' . $good_receive->id . ' has no outstanding product to check.'
-            ], 400);
+                'message' => 'Good receive ' . $good_receive->id . ' is has no putaway outstanding.'
+            ], Response::HTTP_BAD_REQUEST);
         }
 
-        $good_receive->load('inbound_delivery.client', 'details.inbound_delivery_detail.product');
-
-        return $this->getAppGoodReceiveResponse($good_receive);
+        return response()->json([
+            'message' => 'Ok.'
+        ], Response::HTTP_OK);
     }
 
-    public function getAppGoodReceiveResponse($good_receive)
+    /**
+     * Get GR putaway data
+     *
+     * @param GoodReceive $good_receive
+     * @return \Illuminate\Http\Response
+     */
+    public function appGoodReceivePutawayData(GoodReceive $good_receive)
     {
-        return new AppGoodReceiveResponse($good_receive);
+        $good_receive->load('inbound_delivery.client', 'putaway_list.product');
+
+        return new AppPutawayResponse($good_receive);
+    }
+
+    /**
+     * Create initial movement order or return existing one.
+     *
+     * @param GoodReceive $good_receive
+     * @return \Illuminate\Http\Response
+     */
+    public function initPutaway(GoodReceive $good_receive)
+    {
+        $movement_order = $good_receive->movement_orders()->latest()->first();
+        
+        if (!$movement_order) {
+            $unique_id = strtoupper(md5($good_receive->id . '-' . now()->timestamp));
+
+            $movement_order = $good_receive->movement_orders()->create([
+                'reference' => $unique_id,
+                'date' => now()
+            ]);
+        }
+
+        return $movement_order;
+    }
+
+    /**
+     * Submit putaway
+     *
+     * @param GoodReceive $good_receive
+     * @return \Illuminate\Http\Response
+     */
+    public function submitPutaway(MovementOrderDetailFormRequest $request, MovementOrder $movement_order)
+    {
+        DB::transaction(function () use ($request, $movement_order) {
+            $request->inventories->each(function ($inventory) use ($request, $movement_order) {
+                $movement = $inventory->createPutMovement(
+                    $movement_order,
+                    Location::findOrFail($request->location_id),
+                    $request->base_quantity
+                );
+
+                $movement->confirm();
+            });
+
+            $movement_order->documentable->updateMovementStatus();
+        });
+
+        return $this->appGoodReceivePutawayData($movement_order->documentable);
     }
 }

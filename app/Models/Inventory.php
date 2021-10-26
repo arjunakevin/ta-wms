@@ -49,7 +49,7 @@ class Inventory extends Model
             'put_quantity' => $base_quantity
         ]);
 
-        $movement_order->details()->create([
+        $detail = $movement_order->details()->create([
             'is_pick' => 0,
             'product_id' => $this->product_id,
             'source_inventory_id' => $this->id,
@@ -60,6 +60,8 @@ class Inventory extends Model
         ]);
 
         $this->increment('pick_quantity', $base_quantity);
+
+        return $detail;
     }
 
     public function createPickMovement(MovementOrder $movement_order, $detail, int $base_quantity)

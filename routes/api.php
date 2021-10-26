@@ -28,6 +28,16 @@ Route::get('/products', [ProductController::class, 'list'])->name('products.list
 Route::get('/locations', [LocationController::class, 'list'])->name('locations.list');
 
 Route::get('/dashboard', [DashboardController::class, 'appDashboardData'])->name('app.dashboard.data');
-Route::get('/gr_check/{good_receive}/status', [GoodReceiveController::class, 'appGoodReceiveCheckSearch'])->name('app.inbound_check.search');
-Route::get('/gr_check/{good_receive}/data', [GoodReceiveController::class, 'appGoodReceiveCheckData'])->name('app.inbound_check.get');
-Route::post('/gr_check/{good_receive}/check', [GoodReceiveController::class, 'submitCheck'])->name('app.inbound_check.submit');
+
+Route::group(['prefix' => '/gr_check'], function () {
+    Route::get('/{good_receive}/status', [GoodReceiveController::class, 'appGoodReceiveCheckSearch'])->name('app.inbound_check.search');
+    Route::get('/{good_receive}/data', [GoodReceiveController::class, 'appGoodReceiveCheckData'])->name('app.inbound_check.get');
+    Route::post('/{good_receive}/check', [GoodReceiveController::class, 'submitCheck'])->name('app.inbound_check.submit');
+});
+
+Route::group(['prefix' => '/putaway'], function () {
+    Route::get('/{good_receive}/status', [GoodReceiveController::class, 'appGoodReceivePutawaySearch'])->name('app.putaway.search');
+    Route::get('/{good_receive}/data', [GoodReceiveController::class, 'appGoodReceivePutawayData'])->name('app.putaway.get');
+    Route::post('/{good_receive}/init', [GoodReceiveController::class, 'initPutaway'])->name('app.putaway.init');
+    Route::post('/{movement_order}/submit', [GoodReceiveController::class, 'submitPutaway'])->name('app.putaway.submit');
+});

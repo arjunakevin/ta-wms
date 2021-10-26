@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'username',
+        'client_id'
     ];
 
     /**
@@ -41,4 +43,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class)->withDefault([
+            'name' => '',
+            'code' => ''
+        ]);
+    }
 }

@@ -113,7 +113,7 @@ export default {
                     { label: 'Product Code', style: 'width: 250px' },
                     { label: 'Description 1', style: 'width: 200px' },
                     { label: 'Base Quantity', style: 'width: 50px', class: 'text-center' },
-                    { label: 'Available Pick Quantity', style: 'width: 50px', class: 'text-center' },
+                    { label: 'Outstanding Quantity', style: 'width: 50px', class: 'text-center' },
                     { label: 'UoM Name', style: 'width: 50px' }
                 ]
             };

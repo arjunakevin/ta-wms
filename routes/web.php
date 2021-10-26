@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\LocationController;
@@ -35,6 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
     
     Route::get('/', [DashboardController::class, 'index'])->name('home');
     
+    Route::resource('/users', UserController::class);
     Route::resource('/products', ProductController::class);
     Route::resource('/clients', ClientController::class);
     Route::resource('/locations', LocationController::class);

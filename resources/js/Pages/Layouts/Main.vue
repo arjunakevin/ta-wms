@@ -189,6 +189,11 @@ export default {
                         label: 'Product',
                         link: route('products.index'),
                         icon: 'gift'
+                    },
+                    {
+                        label: 'User',
+                        link: route('users.index'),
+                        icon: 'user'
                     }
                 ];
             }

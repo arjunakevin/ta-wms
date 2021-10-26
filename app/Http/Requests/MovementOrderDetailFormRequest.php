@@ -44,6 +44,7 @@ class MovementOrderDetailFormRequest extends FormRequest
         $location = Location::whereCode($this->location_code)->first();
 
         $this->merge([
+            'location' => $location,
             'product_id' => $product ? $product->id : -1,
             'location_id' => $location ? $location->id : -1
         ]);
@@ -73,6 +74,8 @@ class MovementOrderDetailFormRequest extends FormRequest
                     $validator->errors()->add('product_id', 'The selected product has no putaway outstanding.');
                 } else if ($available < $this->base_quantity) {
                     $validator->errors()->add('base_quantity', "Base quantity can't be greater than remaining quantity (Remaining: {$available}).");
+                } else if ($this->location->put_blocked) {
+                    $validator->errors()->add('location_id', "Can't put to this location (Blocked).");
                 } else {
                     $this->merge([
                         'inventories' => $inventories
@@ -93,21 +96,23 @@ class MovementOrderDetailFormRequest extends FormRequest
                     $validator->errors()->add('product_id', 'The selected product has no pick outstanding.');
                 } else if ($this->base_quantity > $open_pick_quantity) {
                     $validator->errors()->add('base_quantity', "Base quantity can't be greater than remaining quantity (Remaining: {$open_pick_quantity}).");
-                }
-
-                $inventories = Inventory::whereProductId($this->product_id)
-                    ->whereLocationId($this->location_id)
-                    ->get();
-
-                $available = $inventories->sum('available_pick_quantity');
-
-                if ($available < $this->base_quantity) {
-                    $validator->errors()->add('location_id', "Product not available in this location (Available : ${available})");
+                }  else if ($this->location->pick_blocked) {
+                    $validator->errors()->add('location_id', "Can't pick from this location (Blocked).");
                 } else {
-                    $this->merge([
-                        'inventories' => $inventories,
-                        'detail' => $detail
-                    ]);
+                    $inventories = Inventory::whereProductId($this->product_id)
+                        ->whereLocationId($this->location_id)
+                        ->get();
+    
+                    $available = $inventories->sum('available_pick_quantity');
+    
+                    if ($available < $this->base_quantity) {
+                        $validator->errors()->add('location_id', "Product not available in this location (Available : ${available})");
+                    } else {
+                        $this->merge([
+                            'inventories' => $inventories,
+                            'detail' => $detail
+                        ]);
+                    }
                 }
             }
         });

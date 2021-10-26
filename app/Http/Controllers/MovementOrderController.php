@@ -8,9 +8,13 @@ use App\Models\DeliveryOrder;
 use App\Models\MovementOrder;
 use Illuminate\Support\Facades\DB;
 use App\Models\MovementOrderDetail;
+use App\Http\Requests\PickFormRequest;
+use App\Http\Resources\PicklistResponse;
 use App\Exceptions\MovementDocumentException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\MovementOrderFormRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MovementOrderController extends Controller
 {
@@ -195,7 +199,7 @@ class MovementOrderController extends Controller
      * Search document for movement order
      *
      * @param Request $request
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public function searchDocument(Request $request)
     {
@@ -255,5 +259,67 @@ class MovementOrderController extends Controller
 
             return $movements->count();
         });
+    }
+
+    /**
+     * Search movement order
+     *
+     * @param MovementOrder $movement_order
+     * @return \Illuminate\Http\Response
+     */
+    public function appMovementSearch(MovementOrder $movement_order)
+    {
+        if ($movement_order->isPutaway()) {
+            throw new ModelNotFoundException();
+        } else if (!$movement_order->open_details()->exists()) {
+            return response()->json([
+                'message' => 'Picklist ' . $movement_order->id . ' has no picking outstanding.'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return response()->json([
+            'message' => 'Ok.'
+        ], Response::HTTP_OK);
+    }
+
+    public function appPicklist(MovementOrder $movement_order)
+    {
+        $movement_order->load('documentable.outbound_delivery.client', 'open_details.product', 'open_details.source_location');
+
+        return new PicklistResponse($movement_order);
+    }
+
+    /**
+     * Submit picking
+     *
+     * @param \App\Reqyests\PickFormRequest $request
+     * @param MovementOrder $movement_order
+     * @return \Illuminate\Http\Response
+     */
+    public function appSubmitPick(PickFormRequest $request, MovementOrder $movement_order)
+    {
+        $movements = MovementOrderDetail::whereStatus(MovementOrderDetail::STATUS_OPEN)
+            ->whereProductId($request->product_id)
+            ->whereSourceLocationId($request->location_id)
+            ->whereMovementOrderId($movement_order->id)
+            ->get();
+
+        $movement_quantity = $movements->sum('base_quantity');
+
+        if ($movement_quantity <= 1) {
+            throw ValidationException::withMessages([
+                'base_quantity' => "Invalid product or location."
+            ]);
+        } else if ($movement_quantity != $request->base_quantity) {
+            throw ValidationException::withMessages([
+                'base_quantity' => "Pick quantity from this location should be ${movement_quantity}."
+            ]);
+        }
+        
+        $movements->each(function ($movement) {
+            $movement->confirm();
+        });
+
+        return $this->appPicklist($movement_order);
     }
 }

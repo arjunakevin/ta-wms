@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use mikehaertl\wkhtmlto\Pdf;
 use App\Models\DeliveryOrder;
 use App\Models\OutboundDelivery;
 use Illuminate\Support\Facades\DB;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\DeliveryOrderFormRequest;
+use App\Http\Resources\AppDeliveryOrderResponse;
 use App\Http\Requests\DeliveryOrderCheckFormRequest;
 use App\Exceptions\DeliveryOrderOutboundDeliveryException;
 
@@ -199,6 +204,10 @@ class DeliveryOrderController extends Controller
 
         $delivery_order->updateCheckStatus();
 
+        if ($request->wantsJson()) {
+            return $this->appDeliveryOrderCheckData($delivery_order);
+        }
+
         return redirect()->route('delivery_orders.check', $delivery_order);
     }
 
@@ -230,17 +239,17 @@ class DeliveryOrderController extends Controller
     }
 
     /**
-     * Print good receive report
+     * Print delivery order report
      *
      * @return \Illuminate\Http\Response
      */
-    public function print(DeliveryOrder $delivery_order)
+    public function report(DeliveryOrder $delivery_order)
     {
         $delivery_order->load('details.outbound_delivery_detail.product');
 
         $data = [
             'id' => $delivery_order->id,
-            'name' => 'Good Receive Report',
+            'name' => 'Good Issue Report',
             'qr' => (QrCode::size(85)->margin(0)->generate($delivery_order->id)->toHtml()),
             'header' => [
                 1 => [
@@ -252,8 +261,8 @@ class DeliveryOrderController extends Controller
                     'value' => $delivery_order->outbound_delivery->client->code
                 ],
                 5 => [
-                    'title' => 'Receive Date',
-                    'value' => $delivery_order->receive_date
+                    'title' => 'Issue Date',
+                    'value' => $delivery_order->good_issue_date
                 ],
                 7 => [
                     'title' => 'Notes',
@@ -265,7 +274,7 @@ class DeliveryOrderController extends Controller
                 return [
                     'product_code' => $detail->outbound_delivery_detail->product->code,
                     'description' => $detail->outbound_delivery_detail->product->description_1,
-                    'base_quantity' => $detail->receive_quantity,
+                    'base_quantity' => $detail->good_issue_quantity,
                     'uom_name' => $detail->outbound_delivery_detail->product->uom_name,
                 ];
             })
@@ -274,11 +283,48 @@ class DeliveryOrderController extends Controller
         $data['qr'] = '<svg' . (Str::between($data['qr'], '<svg', 'svg>')) . 'svg>';
 
         $pdf = new Pdf([
-            'binary' => 'C:\Prodoam Files\wkhtmltopdf\bin\wkhtmltopdf'
+            'binary' => 'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf'
         ]);
 
-        $pdf->addPage(view('prints.document', compact('data'))->render());
+        $pdf->addPage(view('reports.document', compact('data'))->render());
 
         return $pdf->send();
+    }
+
+    /**
+     * Check item check status
+     *
+     * @param DeliveryOrder $delivery_order
+     * @return \Illuminate\Http\Response
+     */
+    public function appDeliveryOrderCheckSearch(DeliveryOrder $delivery_order)
+    {
+        $valid_statuses = [
+            DeliveryOrder::STATUS_FULL_PICK,
+            DeliveryOrder::STATUS_PARTIALLY_CHECKED
+        ];
+
+        if (!in_array($delivery_order->status, $valid_statuses)) {
+            return response()->json([
+                'message' => 'Delivery order ' . $delivery_order->id . ' has no check outstanding.'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return response()->json([
+            'message' => 'Ok.'
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Get good receive check data
+     *
+     * @param DeliveryOrder $delivery_order
+     * @return \Illuminate\Http\Response
+     */
+    public function appDeliveryOrderCheckData(DeliveryOrder $delivery_order)
+    {
+        $delivery_order->load('outbound_delivery.client', 'details.outbound_delivery_detail.product');
+
+        return new AppDeliveryOrderResponse($delivery_order);
     }
 }

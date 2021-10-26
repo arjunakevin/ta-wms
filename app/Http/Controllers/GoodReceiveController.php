@@ -245,7 +245,7 @@ class GoodReceiveController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function print(GoodReceive $good_receive)
+    public function report(GoodReceive $good_receive)
     {
         $good_receive->load('details.inbound_delivery_detail.product');
 
@@ -288,7 +288,7 @@ class GoodReceiveController extends Controller
             'binary' => 'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf'
         ]);
 
-        $pdf->addPage(view('prints.document', compact('data'))->render());
+        $pdf->addPage(view('reports.document', compact('data'))->render());
 
         return $pdf->send();
     }

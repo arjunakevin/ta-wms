@@ -17,6 +17,15 @@ class DeliveryOrder extends Model
     const STATUS_FULLY_CHECKED = 5;
     const STATUS_GOOD_ISSUED = -1;
 
+    const STATUS_LABEL = [
+        DeliveryOrder::STATUS_UNALLOCATED => 'Unallocated',
+        DeliveryOrder::STATUS_PARTIAL_PICK => 'Partial Pick',
+        DeliveryOrder::STATUS_FULL_PICK => 'Full Pick',
+        DeliveryOrder::STATUS_PARTIALLY_CHECKED => 'Partially Checked',
+        DeliveryOrder::STATUS_FULLY_CHECKED => 'Fully Checked',
+        DeliveryOrder::STATUS_GOOD_ISSUED => 'Good Issued'
+    ];
+
     protected $fillable = [
         'outbound_delivery_id',
         'reference',
@@ -126,13 +135,19 @@ class DeliveryOrder extends Model
         $this->inventories()->delete();
 
         $this->update([
-            'status' => DeliveryOrder::STATUS_GOOD_ISSUED
+            'status' => DeliveryOrder::STATUS_GOOD_ISSUED,
+            'good_issue_date' => now()
         ]);
     }
 
     public function isFullyPicked()
     {
-        return false;
+        return in_array($this->status, [
+            DeliveryOrder::STATUS_FULL_PICK,
+            DeliveryOrder::STATUS_PARTIALLY_CHECKED,
+            DeliveryOrder::STATUS_FULLY_CHECKED,
+            DeliveryOrder::STATUS_GOOD_ISSUED
+        ]);
     }
 
     public function updateMovementStatus()
@@ -149,5 +164,10 @@ class DeliveryOrder extends Model
                 'status' => DeliveryOrder::STATUS_PARTIAL_PICK
             ]);
         }
+    }
+
+    public function getStatusLabel()
+    {
+        return DeliveryOrder::STATUS_LABEL[$this->status];
     }
 }

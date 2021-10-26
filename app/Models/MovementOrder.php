@@ -32,6 +32,11 @@ class MovementOrder extends Model
         return $this->hasMany(MovementOrderDetail::class);
     }
 
+    public function open_details()
+    {
+        return $this->details()->whereStatus(MovementOrderDetail::STATUS_OPEN);
+    }
+
     public function getDateAttribute($data)
     {
         if (!$data) {

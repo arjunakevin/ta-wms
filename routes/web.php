@@ -51,7 +51,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('good_receives/{good_receive}/check', [GoodReceiveController::class, 'check'])->name('good_receives.check');
     Route::post('good_receives/{good_receive}/check', [GoodReceiveController::class, 'submitCheck'])->name('good_receives.check.submit');
     Route::post('good_receives/{good_receive}/receive', [GoodReceiveController::class, 'receive'])->name('good_receives.receive');
-    Route::get('good_receives/{good_receive}/print', [GoodReceiveController::class, 'print'])->name('good_receives.print');
+    Route::get('good_receives/{good_receive}/report', [GoodReceiveController::class, 'report'])->name('good_receives.report');
     
     Route::get('inventories', [InventoryController::class, 'index'])->name('inventories.index');
     
@@ -79,5 +79,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('delivery_orders/{delivery_order}/check', [DeliveryOrderController::class, 'check'])->name('delivery_orders.check');
     Route::post('delivery_orders/{delivery_order}/check', [DeliveryOrderController::class, 'submitCheck'])->name('delivery_orders.check.submit');
     Route::post('delivery_orders/{delivery_order}/good_issue', [DeliveryOrderController::class, 'goodIssue'])->name('delivery_orders.good_issue');
-    Route::get('delivery_orders/{delivery_order}/print', [DeliveryOrderController::class, 'print'])->name('delivery_orders.print');
+    Route::get('delivery_orders/{delivery_order}/report', [DeliveryOrderController::class, 'report'])->name('delivery_orders.report');
 });

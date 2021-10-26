@@ -39,16 +39,16 @@ export default {
                     bg: ['#f77eb9', '#fdbd88','#00cccc']
                 },
                 {
-                    id: 'grChart',
-                    label: 'Good Receive',
-                    data: 'gr_data',
-                    bg: ['#f77eb9', '#fdbd88', '#55efc4', '#7ebcff', '#5b47fb', '#00cccc'],
-                },
-                {
                     id: 'outboundChart',
                     label: 'Outbound Delivery',
                     data: 'outbound_data',
                     bg: ['#f77eb9', '#fdbd88','#00cccc']
+                },
+                {
+                    id: 'grChart',
+                    label: 'Good Receive',
+                    data: 'gr_data',
+                    bg: ['#f77eb9', '#fdbd88', '#55efc4', '#7ebcff', '#5b47fb', '#00cccc'],
                 },
                 {
                     id: 'doChart',

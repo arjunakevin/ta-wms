@@ -2,7 +2,7 @@
     <div>
         <aside class="aside aside-fixed">
         <div class="aside-header">
-            <a href="../../index.html" class="aside-logo">Goodang<span>WMS</span></a>
+            <Link :href="$route('home')" class="aside-logo">Goodang<span>WMS</span></Link>
             <a href="" class="aside-menu-link">
             <i data-feather="menu"></i>
             <i data-feather="x"></i>
@@ -13,8 +13,6 @@
             <div class="d-flex align-items-center justify-content-start">
                 <a href="" class="avatar"><img src="/profile.png" class="rounded-circle" alt=""></a>
                 <div class="aside-alert-link">
-                <a href="" class="new" data-toggle="tooltip" title="You have 2 unread messages"><i data-feather="message-square"></i></a>
-                <a href="" class="new" data-toggle="tooltip" title="You have 4 new notifications"><i data-feather="bell"></i></a>
                 <a href="" data-toggle="tooltip" title="Sign out"><i data-feather="log-out"></i></a>
                 </div>
             </div>
@@ -27,10 +25,6 @@
             </div>
             <div class="collapse" id="loggedinMenu">
                 <ul class="nav nav-aside mg-b-0">
-                <li class="nav-item"><a href="" class="nav-link"><i data-feather="edit"></i> <span>Edit Profile</span></a></li>
-                <li class="nav-item"><a href="" class="nav-link"><i data-feather="user"></i> <span>View Profile</span></a></li>
-                <li class="nav-item"><a href="" class="nav-link"><i data-feather="settings"></i> <span>Account Settings</span></a></li>
-                <li class="nav-item"><a href="" class="nav-link"><i data-feather="help-circle"></i> <span>Help Center</span></a></li>
                 <li class="nav-item"><a href="" class="nav-link"><i data-feather="log-out"></i> <span>Sign Out</span></a></li>
                 </ul>
             </div>
@@ -112,7 +106,7 @@ export default {
                     },
                     {
                         label: 'Delivery Order',
-                        link: '#',
+                        link: route('delivery_orders.index'),
                         icon: 'file-minus'
                     },
                     {
@@ -175,7 +169,7 @@ export default {
                     },
                     {
                         label: 'Delivery Order',
-                        link: '#',
+                        link: route('delivery_orders.index'),
                         icon: 'file-minus'
                     },
                     {

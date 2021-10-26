@@ -8,6 +8,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\GoodReceiveController;
+use App\Http\Controllers\DeliveryOrderController;
 use App\Http\Controllers\MovementOrderController;
 use App\Http\Controllers\InboundDeliveryController;
 use App\Http\Controllers\OutboundDeliveryController;
@@ -68,4 +69,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('outbound_details', [OutboundDeliveryController::class, 'storeDetail'])->name('outbound_details.store');
     Route::put('outbound_details/{detail}', [OutboundDeliveryController::class, 'updateDetail'])->name('outbound_details.update');
     Route::delete('outbound_details/{detail}', [OutboundDeliveryController::class, 'destroyDetail'])->name('outbound_details.destroy');
+
+    Route::resource('delivery_orders', DeliveryOrderController::class)
+        ->parameter('delivery_orders', 'delivery_order')
+        ->except('create');
+    Route::get('delivery_orders/{outbound}/create', [DeliveryOrderController::class, 'create'])->name('delivery_orders.create');
+    Route::post('delivery_orders/outbound/search', [DeliveryOrderController::class, 'searchOutbound'])->name('delivery_orders.outbound.search');
+    
+    Route::get('delivery_orders/{delivery_order}/check', [DeliveryOrderController::class, 'check'])->name('delivery_orders.check');
+    Route::post('delivery_orders/{delivery_order}/check', [DeliveryOrderController::class, 'submitCheck'])->name('delivery_orders.check.submit');
+    Route::post('delivery_orders/{delivery_order}/good_issue', [DeliveryOrderController::class, 'goodIssue'])->name('delivery_orders.good_issue');
+    Route::get('delivery_orders/{delivery_order}/print', [DeliveryOrderController::class, 'print'])->name('delivery_orders.print');
 });

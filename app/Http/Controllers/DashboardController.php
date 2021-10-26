@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\GoodReceive;
 use Illuminate\Http\Request;
+use App\Models\DeliveryOrder;
 use App\Models\InboundDelivery;
+use App\Models\OutboundDelivery;
 
 class DashboardController extends Controller
 {
@@ -17,10 +19,26 @@ class DashboardController extends Controller
     {
         $data = [
             'inbound_data' => $this->getInboundData(),
-            'gr_data' => $this->getGrData()
+            'gr_data' => $this->getGrData(),
+            'outbound_data' => $this->getOutboundData(),
+            'do_data' => $this->getDoData()
         ];
 
         return inertia()->render('Dashboard', compact('data'));
+    }
+
+    /**
+     * Get dashboard data for mobile.
+     */
+    public function appDashboardData()
+    {
+        $data = [
+            'inbound_count' => InboundDelivery::count(),
+            'gr_count' => GoodReceive::count(),
+            'outbound_count' => OutboundDelivery::count(),
+            'do_count' => DeliveryOrder::count(),
+        ];
+        return response()->json($data);
     }
     
     protected function getInboundData()
@@ -34,17 +52,17 @@ class DashboardController extends Controller
             [
                 'label' => 'Unreceived',
                 'count' => $unreceived,
-                'percentage' => $total ? ($unreceived / $total) * 100 : 0
+                'percentage' => round($total ? ($unreceived / $total) * 100 : 0, 1)
             ],
             [
                 'label' => 'Partially Received',
                 'count' => $partial,
-                'percentage' => $total ? ($partial / $total) * 100 : 0
+                'percentage' => round($total ? ($partial / $total) * 100 : 0, 1)
             ],
             [
                 'label' => 'Fully Received',
                 'count' => $full,
-                'percentage' => $total ? ($full / $total) * 100 : 0
+                'percentage' => round($total ? ($full / $total) * 100 : 0, 1)
             ]
         ];
     }
@@ -63,33 +81,103 @@ class DashboardController extends Controller
             [
                 'label' => 'Draft',
                 'count' => $draft,
-                'percentage' => $total ? ($draft / $total) * 100 : 0
+                'percentage' => round($total ? ($draft / $total) * 100 : 0, 1)
             ],
             [
                 'label' => 'Partially Checked',
                 'count' => $partial_check,
-                'percentage' => $total ? ($partial_check / $total) * 100 : 0
+                'percentage' => round($total ? ($partial_check / $total) * 100 : 0, 1)
             ],
             [
                 'label' => 'Fully Checked',
                 'count' => $full_check,
-                'percentage' => $total ? ($full_check / $total) * 100 : 0
+                'percentage' => round($total ? ($full_check / $total) * 100 : 0, 1)
             ],
             [
                 'label' => 'Received',
                 'count' => $received,
-                'percentage' => $total ? ($received / $total) * 100 : 0
+                'percentage' => round($total ? ($received / $total) * 100 : 0, 1)
             ],
             [
                 'label' => 'Partial Putaway',
                 'count' => $partial_put,
-                'percentage' => $total ? ($partial_put / $total) * 100 : 0
+                'percentage' => round($total ? ($partial_put / $total) * 100 : 0, 1)
             ],
             [
                 'label' => 'Full Putaway',
                 'count' => $full_put,
-                'percentage' => $total ? ($full_put / $total) * 100 : 0
+                'percentage' => round($total ? ($full_put / $total) * 100 : 0, 1)
             ],
+        ];
+    }
+
+    protected function getDoData()
+    {
+        $total = DeliveryOrder::count();
+        $un = DeliveryOrder::whereStatus(DeliveryOrder::STATUS_UNALLOCATED)->count();
+        $partial_pick = DeliveryOrder::whereStatus(DeliveryOrder::STATUS_PARTIAL_PICK)->count();
+        $full_pick = DeliveryOrder::whereStatus(DeliveryOrder::STATUS_FULL_PICK)->count();
+        $partial_check = DeliveryOrder::whereStatus(DeliveryOrder::STATUS_PARTIALLY_CHECKED)->count();
+        $full_check = DeliveryOrder::whereStatus(DeliveryOrder::STATUS_FULLY_CHECKED)->count();
+        $gi = DeliveryOrder::whereStatus(DeliveryOrder::STATUS_GOOD_ISSUED)->count();
+
+        return [
+            [
+                'label' => 'Unallocated',
+                'count' => $un,
+                'percentage' => round($total ? ($un / $total) * 100 : 0, 1)
+            ],
+            [
+                'label' => 'Partial Pick',
+                'count' => $partial_pick,
+                'percentage' => round($total ? ($partial_pick / $total) * 100 : 0, 1)
+            ],
+            [
+                'label' => 'Full Pick',
+                'count' => $full_pick,
+                'percentage' => round($total ? ($full_pick / $total) * 100 : 0, 1)
+            ],
+            [
+                'label' => 'Partially Checked',
+                'count' => $partial_check,
+                'percentage' => round($total ? ($partial_check / $total) * 100 : 0, 1)
+            ],
+            [
+                'label' => 'Fully Checked',
+                'count' => $full_check,
+                'percentage' => round($total ? ($full_check / $total) * 100 : 0, 1)
+            ],
+            [
+                'label' => 'Good Issue',
+                'count' => $gi,
+                'percentage' => round($total ? ($gi / $total) * 100 : 0, 1)
+            ],
+        ];
+    }
+
+    protected function getOutboundData()
+    {
+        $total = OutboundDelivery::count();
+        $un = OutboundDelivery::whereStatus(OutboundDelivery::STATUS_UNCOMMITTED)->count();
+        $partial = OutboundDelivery::whereStatus(OutboundDelivery::STATUS_PARTIALLY_COMMITTED)->count();
+        $full = OutboundDelivery::whereStatus(OutboundDelivery::STATUS_FULLY_COMMITTED)->count();
+        
+        return [
+            [
+                'label' => 'Uncommitted',
+                'count' => $un,
+                'percentage' => round($total ? ($un / $total) * 100 : 0, 1)
+            ],
+            [
+                'label' => 'Partially Committed',
+                'count' => $partial,
+                'percentage' => round($total ? ($partial / $total) * 100 : 0, 1)
+            ],
+            [
+                'label' => 'Fully Committed',
+                'count' => $full,
+                'percentage' => round($total ? ($full / $total) * 100 : 0, 1)
+            ]
         ];
     }
 }

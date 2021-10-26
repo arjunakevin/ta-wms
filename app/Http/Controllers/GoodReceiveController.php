@@ -10,7 +10,9 @@ use App\Models\InboundDelivery;
 use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Requests\GoodReceiveFormRequest;
+use App\Http\Resources\AppGoodReceiveResponse;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\GoodReceiveCheckFormRequest;
 use App\Exceptions\GoodReceiveInboundDeliveryException;
 
@@ -200,6 +202,10 @@ class GoodReceiveController extends Controller
 
         $good_receive->updateCheckStatus();
 
+        if ($request->wantsJson()) {
+            return route('app.inbound_check.get', $good_receive);
+        }
+
         return redirect()->route('good_receives.check', $good_receive);
     }
 
@@ -281,5 +287,55 @@ class GoodReceiveController extends Controller
         $pdf->addPage(view('prints.document', compact('data'))->render());
 
         return $pdf->send();
+    }
+
+    public function appGoodReceiveCheckSearch(GoodReceive $good_receive)
+    {
+        $valid_statuses = [
+            GoodReceive::STATUS_DRAFT,
+            GoodReceive::STATUS_PARTIALLY_CHECKED
+        ];
+
+        if (!in_array($good_receive->status, $valid_statuses)) {
+            return response()->json([
+                'message' => 'Good receive ' . $good_receive->id . ' is fully checked.'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return response()->json([
+            'message' => 'Ok.'
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Search good receive check
+     *
+     * @param GoodReceive $good_receive
+     * @return \Illuminate\Http\Response
+     */
+    public function appGoodReceiveCheckData(GoodReceive $good_receive)
+    {
+        $good_receive->load('inbound_delivery.client', 'details.inbound_delivery_detail.product');
+
+        return new AppGoodReceiveResponse($good_receive);
+    }
+
+    /**
+     * Submit good receive check
+     *
+     * @param GoodReceive $good_receive
+     * @return \Illuminate\Http\Response
+     */
+    public function appGoodReceiveSubmitCheck(GoodReceiveCheckFormRequest $request, GoodReceive $good_receive)
+    {   
+        if ($good_receive->details->sum('open_check_quantity') <= 0) {
+            return response()->json([
+                'message' => 'Good receive ' . $good_receive->id . ' has no outstanding product to check.'
+            ], 400);
+        }
+
+        $good_receive->load('inbound_delivery.client', 'details.inbound_delivery_detail.product');
+
+        return new AppGoodReceiveResponse($good_receive);
     }
 }

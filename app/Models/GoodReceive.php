@@ -17,6 +17,15 @@ class GoodReceive extends Document
     const STATUS_PARTIAL_PUTAWAY = 5;
     const STATUS_FULL_PUTAWAY = -1;
 
+    const STATUS_LABEL = [
+        GoodReceive::STATUS_DRAFT => 'Draft',
+        GoodReceive::STATUS_PARTIALLY_CHECKED => 'Partially Checked',
+        GoodReceive::STATUS_FULLY_CHECKED => 'Fully Checked',
+        GoodReceive::STATUS_RECEIVED => 'Received',
+        GoodReceive::STATUS_PARTIAL_PUTAWAY => 'Partial Putaway',
+        GoodReceive::STATUS_FULL_PUTAWAY => 'Full Putaway'
+    ];
+
     protected $fillable = [
         'inbound_delivery_id',
         'reference',
@@ -174,5 +183,10 @@ class GoodReceive extends Document
                 'status' => GoodReceive::STATUS_PARTIAL_PUTAWAY
             ]);
         }
+    }
+
+    public function getStatusLabel()
+    {
+        return GoodReceive::STATUS_LABEL[$this->status];
     }
 }

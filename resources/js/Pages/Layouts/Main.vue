@@ -13,7 +13,7 @@
             <div class="d-flex align-items-center justify-content-start">
                 <a href="" class="avatar"><img src="/profile.png" class="rounded-circle" alt=""></a>
                 <div class="aside-alert-link">
-                <a href="" data-toggle="tooltip" title="Sign out"><i data-feather="log-out"></i></a>
+                <Link :href="$route('logout')" method="post" data-toggle="tooltip" title="Sign out"><i data-feather="log-out"></i></Link>
                 </div>
             </div>
             <div class="aside-loggedin-user">

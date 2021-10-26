@@ -25,7 +25,7 @@ class AuthController extends Controller
      * Attempt user login
      *
      * @param Request $request
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public function login(Request $request)
     {
@@ -56,7 +56,7 @@ class AuthController extends Controller
     /**
      * Attempt user login for mobile app
      *
-     * @return void
+     * @return string
      */
     public function appLogin(Request $request)
     {
@@ -81,5 +81,17 @@ class AuthController extends Controller
                 'auth' => 'Invalid credentials.'
             ]);
         }
+    }
+
+    /**
+     * Logout
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout()
+    {
+        Auth::logout();
+
+        return redirect()->route('login');
     }
 }

@@ -31,6 +31,8 @@ Route::group(['middleware' => 'guest'], function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
     Route::get('/', [DashboardController::class, 'index'])->name('home');
     
     Route::resource('/products', ProductController::class);

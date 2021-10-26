@@ -52,4 +52,34 @@ class AuthController extends Controller
             ]);
         }
     }
+
+    /**
+     * Attempt user login for mobile app
+     *
+     * @return void
+     */
+    public function appLogin(Request $request)
+    {
+        try {
+            $request->validate([
+                'username' => 'required',
+                'password' => 'required',
+                'device_name' => 'required',
+            ]);
+    
+            $user = User::where('username', $request->username)
+                ->orWhere('email', $request->username)
+                ->first();
+    
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                throw new LoginException();
+            }
+    
+            return $user->createToken($request->device_name)->plainTextToken;
+        } catch (LoginException $e) {
+            throw ValidationException::withMessages([
+                'auth' => 'Invalid credentials.'
+            ]);
+        }
+    }
 }

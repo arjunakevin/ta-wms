@@ -26,6 +26,7 @@ class DeliveryOrderController extends Controller
     public function index()
     {
         $data = DeliveryOrder::with('outbound_delivery.client')
+            ->latest()
             ->paginate();
 
         return inertia()->render('DeliveryOrder/Index', compact('data'));
@@ -183,7 +184,7 @@ class DeliveryOrderController extends Controller
     {
         $details = $delivery_order->details()
             ->with('outbound_delivery_detail.product')
-            ->paginate();
+            ->get();
 
         $delivery_order->load('outbound_delivery');
 

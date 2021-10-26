@@ -15,7 +15,7 @@ class LocationController extends Controller
      */
     public function index()
     {
-        $data = Location::paginate();
+        $data = Location::latest()->paginate();
 
         return inertia()->render('Location/Index', compact('data'));
     }

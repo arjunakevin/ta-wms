@@ -30,6 +30,7 @@ class GoodReceiveController extends Controller
     public function index()
     {
         $data = GoodReceive::with('inbound_delivery.client')
+            ->latest()
             ->paginate();
 
         return inertia()->render('GoodReceive/Index', compact('data'));

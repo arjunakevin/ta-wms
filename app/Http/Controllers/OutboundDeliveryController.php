@@ -19,6 +19,7 @@ class OutboundDeliveryController extends Controller
     public function index(Request $request)
     {
         $data = OutboundDelivery::with('client')
+            ->latest()
             ->paginate();
 
         return inertia()->render('OutboundDelivery/Index', compact('data'));

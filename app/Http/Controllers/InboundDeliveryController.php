@@ -49,6 +49,7 @@ class InboundDeliveryController extends Controller
 
                 $query->where('status', $op, InboundDelivery::STATUS_FULLY_RECEIVED);
             })
+            ->latest()
             ->paginate();
 
         return inertia()->render('InboundDelivery/Index', compact('data'));

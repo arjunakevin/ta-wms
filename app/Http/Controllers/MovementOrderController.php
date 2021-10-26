@@ -31,6 +31,7 @@ class MovementOrderController extends Controller
                 'destination_location',
                 'product'
             )
+            ->latest()
             ->paginate();
         
         $data->getCollection()
@@ -180,6 +181,7 @@ class MovementOrderController extends Controller
     {
         $data = MovementOrder::withCount('details')
             ->with('documentable')
+            ->latest()
             ->paginate();
 
         $data->getCollection()->transform(function ($data) {

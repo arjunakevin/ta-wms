@@ -15,7 +15,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $data = Client::paginate();
+        $data = Client::latest()->paginate();
 
         return inertia()->render('Client/Index', compact('data'));
     }

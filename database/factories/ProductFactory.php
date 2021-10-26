@@ -22,13 +22,15 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
+        $uoms = ['PCS', 'BOX'];
+
         return [
             'client_id' => Client::factory(),
-            'code' => 'PRD-' . strtoupper($this->faker->lexify('??????')) . '-' . $this->faker->randomNumber(6),
-            'barcode' => $this->faker->unique()->randomNumber(8),
+            'code' => $this->faker->unique()->numerify('########'),
+            'barcode' => $this->faker->optional()->randomNumber(8),
             'description_1' => $this->faker->text(),
             'description_2' => $this->faker->optional()->text(),
-            'uom_name' => strtoupper($this->faker->word()),
+            'uom_name' => $this->faker->randomElement($uoms),
             'is_active' => $this->faker->boolean()
         ];
     }

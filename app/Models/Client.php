@@ -15,4 +15,9 @@ class Client extends Model
         'address_1',
         'address_2'
     ];
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

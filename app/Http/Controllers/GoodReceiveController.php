@@ -203,7 +203,7 @@ class GoodReceiveController extends Controller
         $good_receive->updateCheckStatus();
 
         if ($request->wantsJson()) {
-            return route('app.inbound_check.get', $good_receive);
+            return $this->getAppGoodReceiveResponse($good_receive);
         }
 
         return redirect()->route('good_receives.check', $good_receive);
@@ -336,6 +336,11 @@ class GoodReceiveController extends Controller
 
         $good_receive->load('inbound_delivery.client', 'details.inbound_delivery_detail.product');
 
+        return $this->getAppGoodReceiveResponse($good_receive);
+    }
+
+    public function getAppGoodReceiveResponse($good_receive)
+    {
         return new AppGoodReceiveResponse($good_receive);
     }
 }

@@ -23,6 +23,22 @@ class Inventory extends Model
         'available_pick_quantity'
     ];
 
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('client_id', function ($query) {
+            if (auth()->check() && auth()->user()->client_id != null) {
+                $query->whereHas('product', function ($query) {
+                    $query->where('client_id', auth()->user()->client_id);
+                });
+            }
+        });
+    }
+
     public function getAvailablePickQuantityAttribute()
     {
         return $this->base_quantity - $this->pick_quantity;

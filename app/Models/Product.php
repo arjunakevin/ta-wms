@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Scopes\ClientScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -18,6 +19,10 @@ class Product extends Model
         'uom_name',
         'is_active'
     ];
+
+    protected static function booted() {
+        static::addGlobalScope(new ClientScope);
+    }
     
     public function client()
     {

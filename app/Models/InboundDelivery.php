@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Scopes\ClientScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -27,6 +28,10 @@ class InboundDelivery extends Model
         'arrival_date_formatted',
         'po_date_formatted'
     ];
+
+    protected static function booted() {
+        static::addGlobalScope(new ClientScope);
+    }
 
     /**
      * Update inbound delivery status

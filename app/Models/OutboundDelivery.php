@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Scopes\ClientScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -30,6 +31,10 @@ class OutboundDelivery extends Model
     protected $appends = [
         'request_delivery_date_formatted'
     ];
+
+    protected static function booted() {
+        static::addGlobalScope(new ClientScope);
+    }
 
     public function client()
     {

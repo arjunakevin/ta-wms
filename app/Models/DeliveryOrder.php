@@ -37,6 +37,22 @@ class DeliveryOrder extends Model
     protected $appends = [
         'good_issue_date_formatted'
     ];
+    
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('client_id', function ($query) {
+            if (auth()->check() && auth()->user()->client_id != null) {
+                $query->whereHas('outbound_delivery', function ($query) {
+                    $query->where('client_id', auth()->user()->client_id);
+                });
+            }
+        });
+    }
 
     public function outbound_delivery()
     {

@@ -219,4 +219,10 @@ class GoodReceiveTest extends Base
         $this->assertEquals(100, $good_receive->details->sum('receive_quantity'));
         $this->assertEquals(100, $good_receive->inventories->sum('base_quantity'));
     }
+
+    /** @test */
+    public function can_print_good_receive_report()
+    {
+        return $this->assertTrue(true);
+    }
 }

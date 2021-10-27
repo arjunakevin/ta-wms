@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\DeliveryOrder;
 use App\Models\DeliveryOrderDetail;
+use App\Models\OutboundDeliveryDetail;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DeliveryOrderDetailFactory extends Factory
@@ -22,7 +24,11 @@ class DeliveryOrderDetailFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'delivery_order_id' => DeliveryOrder::factory(),
+            'outbound_detail_id' => OutboundDeliveryDetail::factory(),
+            'base_quantity' => $this->faker->randomNumber(3),
+            'good_issue_quantity' => $this->faker->randomNumber(3),
+            'open_check_quantity' => $this->faker->randomNumber(3)
         ];
     }
 }

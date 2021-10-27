@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\Document;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class DeliveryOrder extends Model
+class DeliveryOrder extends Document
 {
     use HasFactory;
 

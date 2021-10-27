@@ -68,13 +68,13 @@ class InboundDeliveryTest extends Base
     }
 
     /** @test */
-    public function can_view_existing_inbound_delivery()
+    public function can_visit_edit_inbound_delivery_form()
     {
         $inbound_delivery = InboundDelivery::factory()->create();
 
-        $this->get(route('inbounds.show', $inbound_delivery))
+        $this->get(route('inbounds.edit', $inbound_delivery))
             ->assertInertia(function (Assert $page) {
-                return $page->component('InboundDelivery/Detail')
+                return $page->component('InboundDelivery/Form')
                     ->has('inbound');
             });
     }
@@ -179,19 +179,5 @@ class InboundDeliveryTest extends Base
         
         $this->assertDatabaseCount('inbound_delivery_details', 0);
         $this->assertDatabaseMissing('inbound_delivery_details', ['id' => $detail->id]);
-    }
-
-    /** @test */
-    public function can_validate_detail_form_request()
-    {
-        $data = InboundDeliveryDetail::factory([
-            'inbound_delivery_id' => '',
-            'line_id' => '',
-            'code' => '',
-            'base_quantity' => ''
-        ])->raw();
-
-        $this->post(route('inbound_details.store'), $data)
-            ->assertSessionHasErrors();
     }
 }

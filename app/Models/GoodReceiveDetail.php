@@ -20,6 +20,11 @@ class GoodReceiveDetail extends Model
         'check_quantity'
     ];
 
+    public function good_receive()
+    {
+        return $this->belongsTo(GoodReceive::class);
+    }
+
     public function inbound_delivery_detail()
     {
         return $this->belongsTo(InboundDeliveryDetail::class, 'inbound_detail_id');

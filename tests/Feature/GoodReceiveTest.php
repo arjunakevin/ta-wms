@@ -6,6 +6,7 @@ use Tests\Base;
 use App\Models\GoodReceive;
 use Inertia\Testing\Assert;
 use App\Models\InboundDelivery;
+use App\Models\GoodReceiveDetail;
 use App\Models\InboundDeliveryDetail;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,17 +28,6 @@ class GoodReceiveTest extends Base
     }
 
     /** @test */
-    public function can_visit_good_receive_create_page()
-    {
-        $inbound = InboundDelivery::factory()->create();
-        
-        $this->get(route('good_receives.create', $inbound))
-            ->assertInertia(function (Assert $page) {
-                return $page->component('GoodReceive/Form');
-            });
-    }
-
-    /** @test */
     public function can_search_initial_inbound_delivery()
     {
         $inbound = InboundDelivery::factory()->create();
@@ -52,8 +42,6 @@ class GoodReceiveTest extends Base
     /** @test */
     public function can_create_new_good_receive()
     {
-        $this->withoutExceptionHandling();
-        
         $inbound = InboundDelivery::factory()
             ->hasDetails(2, [
                 'base_quantity' => 100,
@@ -95,13 +83,13 @@ class GoodReceiveTest extends Base
     }
 
     /** @test */
-    public function can_view_existing_good_receive()
+    public function can_visit_edit_good_receive_form()
     {
         $good_receive = GoodReceive::factory()->create();
 
-        $this->get(route('good_receives.show', $good_receive))
+        $this->get(route('good_receives.edit', $good_receive))
             ->assertInertia(function (Assert $page) {
-                return $page->component('GoodReceive/Detail')
+                return $page->component('GoodReceive/Form')
                     ->has('good_receive');
             });
     }
@@ -159,5 +147,76 @@ class GoodReceiveTest extends Base
         $this->assertDatabaseMissing('good_receives', ['id' => $good_receive->id]);
         $this->assertNotEquals(InboundDelivery::STATUS_FULLY_RECEIVED, $inbound->status);
         $this->assertEquals(100, $inbound->details->sum('open_quantity'));
+    }
+
+    /** @test */
+    public function can_visit_item_check_page()
+    {
+        $good_receive = GoodReceive::factory()->create();
+
+        $this->get(route('good_receives.check', $good_receive))
+            ->assertInertia(function (Assert $page) {
+                return $page->component('GoodReceive/Check');
+            });
+    }
+
+    /** @test */
+    public function can_validate_item_check_request()
+    {
+        $good_receive_detail = GoodReceiveDetail::factory()->create();
+        $data = [
+            'product_code' => '',
+            'base_quantity' => ''
+        ];
+
+        $this->post(route('good_receives.check', $good_receive_detail->good_receive), $data)
+            ->assertSessionHasErrors();
+    }
+
+    /** @test */
+    public function can_submit_item_check()
+    {
+        $good_receive_detail = GoodReceiveDetail::factory([
+            'base_quantity' => 100,
+            'open_check_quantity' => 100
+        ])->create();
+
+        $data = [
+            'product_code' => $good_receive_detail->inbound_delivery_detail->product->code,
+            'base_quantity' => 100
+        ];
+
+        $this->assertEquals(100, $good_receive_detail->open_check_quantity);
+
+        $this->post(route('good_receives.check', $good_receive_detail->good_receive), $data);
+
+        $this->assertEquals(0, $good_receive_detail->refresh()->open_check_quantity);
+        $this->assertEquals(GoodReceive::STATUS_FULLY_CHECKED, $good_receive_detail->good_receive->status);
+    }
+    
+    /** @test */
+    public function can_receive_good_receive()
+    {
+        $good_receive = GoodReceive::factory([
+                'status' => GoodReceive::STATUS_FULLY_CHECKED
+            ])
+            ->hasDetails([
+                'base_quantity' => 100,
+                'receive_quantity' => 0,
+                'open_check_quantity' => 0
+            ])
+            ->create();
+
+        $this->assertEquals(GoodReceive::STATUS_FULLY_CHECKED, $good_receive->status);
+        $this->assertEquals(0, $good_receive->details->sum('receive_quantity'));
+        $this->assertEquals(0, $good_receive->inventories->sum('base_quantity'));
+
+        $this->post(route('good_receives.receive', $good_receive));
+
+        $good_receive->refresh();
+        
+        $this->assertEquals(GoodReceive::STATUS_RECEIVED, $good_receive->status);
+        $this->assertEquals(100, $good_receive->details->sum('receive_quantity'));
+        $this->assertEquals(100, $good_receive->inventories->sum('base_quantity'));
     }
 }
